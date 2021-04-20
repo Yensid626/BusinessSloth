@@ -81,6 +81,9 @@ public class CameraMgr : MonoBehaviour
             //transform.localPosition += (velocity.forward * dt);
             //transform.localPosition += (velocity.up * dt);
             FPRig.transform.Rotate(rotation * dt);
+            //Debug.Log(FPRig.transform.rotation.eulerAngles.x); Debug.Log(Utils.Clamp(Utils.Degrees180(FPRig.transform.rotation.eulerAngles.x), -60, 60));
+            FPRig.transform.rotation = Quaternion.Euler(Utils.Clamp(Utils.Degrees180(FPRig.transform.rotation.eulerAngles.x), -60, 60), FPRig.transform.rotation.eulerAngles.y, 0);
+
 
             position = FPRig.transform.position;
             facing = FPRig.transform.rotation.eulerAngles;

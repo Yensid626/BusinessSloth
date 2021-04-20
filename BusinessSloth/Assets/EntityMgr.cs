@@ -7,7 +7,7 @@ public class EntityMgr : MonoBehaviour
     public GameObject cameraMgr;
     public GameObject entities;
     public GameObject selectionMgr;
-    internal List<Entity381> entitiesPhysics = new List<Entity381>();
+    public List<Entity381> entitiesPhysics = new List<Entity381>();
 
     // Start is called before the first frame update
     void Start()

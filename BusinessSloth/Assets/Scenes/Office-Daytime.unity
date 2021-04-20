@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -151,7 +151,7 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   facing: {x: 0, y: 0, z: 0}
   deltaVelocity: 0
-  deltaRotation: 25
+  deltaRotation: 60
   FPRig: {fileID: 534669902}
   firstPerson: 0
 --- !u!4 &47890828
@@ -388,7 +388,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: -0, y: -0.65455586, z: -0, w: 0.7560137}
-  m_LocalPosition: {x: 8.536, y: 1.206, z: -4.617}
+  m_LocalPosition: {x: 8.42, y: 1.665, z: -4.728}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -515,6 +515,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1174545309}
     m_Modifications:
+    - target: {fileID: 2263554080447683594, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: overrideChildrenSpawnChances
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2263554080447683594, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: childrenSpawnChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2263554080447683594, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: mySpawnChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2263554080447683594, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: allChildrenTogether
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2383106062585515176, guid: cf040923fa1f6a84daeac6fd79ec00ec,
         type: 3}
       propertyPath: itemSpawnChance
@@ -539,6 +559,11 @@ PrefabInstance:
         type: 3}
       propertyPath: overrideChildrenSpawnChances
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4729716949046627535, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: childrenSpawnChance
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5513164584891081912, guid: cf040923fa1f6a84daeac6fd79ec00ec,
         type: 3}
@@ -604,6 +629,11 @@ PrefabInstance:
         type: 3}
       propertyPath: singleItemIndex
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7953809507271499951, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: childrenSpawnChance
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf040923fa1f6a84daeac6fd79ec00ec, type: 3}
@@ -715,6 +745,11 @@ PrefabInstance:
       propertyPath: chooseSingleItem
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4729716949046627535, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: mySpawnChance
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 5513164584891081912, guid: cf040923fa1f6a84daeac6fd79ec00ec,
         type: 3}
       propertyPath: m_Name
@@ -775,7 +810,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3294070577827620068, guid: cf040923fa1f6a84daeac6fd79ec00ec, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cf040923fa1f6a84daeac6fd79ec00ec, type: 3}
 --- !u!4 &1144322031 stripped
 Transform:
@@ -1078,11 +1114,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400012, guid: 438ef91a5f9e61c45941464eebc462dd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.462
+      value: 1.375
+      objectReference: {fileID: 0}
+    - target: {fileID: 400012, guid: 438ef91a5f9e61c45941464eebc462dd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400012, guid: 438ef91a5f9e61c45941464eebc462dd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 438ef91a5f9e61c45941464eebc462dd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.097516
+      value: 4.07
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 438ef91a5f9e61c45941464eebc462dd, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1090,7 +1134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 438ef91a5f9e61c45941464eebc462dd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -21.99
+      value: -12.26
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 438ef91a5f9e61c45941464eebc462dd, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1266,6 +1310,7 @@ MonoBehaviour:
   entityMgr: {fileID: 1766018889}
   cameraMgr: {fileID: 47890826}
   selectedEntity: {fileID: 0}
+  selectedEntityIndex: 0
 --- !u!4 &1467315635
 Transform:
   m_ObjectHideFlags: 0
@@ -1377,6 +1422,16 @@ PrefabInstance:
       propertyPath: mySpawnChance
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4729716949046627535, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: mySpawnChance
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4729716949046627535, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+        type: 3}
+      propertyPath: childrenSpawnChance
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5513164584891081912, guid: cf040923fa1f6a84daeac6fd79ec00ec,
         type: 3}
       propertyPath: m_Name
@@ -1485,7 +1540,7 @@ PrefabInstance:
     - target: {fileID: 7113128057941758010, guid: cf040923fa1f6a84daeac6fd79ec00ec,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12.167
+      value: 12.176
       objectReference: {fileID: 0}
     - target: {fileID: 7113128057941758010, guid: cf040923fa1f6a84daeac6fd79ec00ec,
         type: 3}
@@ -1561,6 +1616,7 @@ MonoBehaviour:
   cameraMgr: {fileID: 47890826}
   entities: {fileID: 1903926307}
   selectionMgr: {fileID: 1467315633}
+  entitiesPhysics: []
 --- !u!4 &1766018891
 Transform:
   m_ObjectHideFlags: 0
@@ -1632,19 +1688,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnSpeedMultiplier: 4
   accelerationMultiplier: 2.8
---- !u!114 &1996534397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1996534395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad43fadcdf51d344d96d2e4d3e8b5996, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrol: 0
 --- !u!114 &1996534398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1660,10 +1703,10 @@ MonoBehaviour:
   deltaDesiredSpeed: 5
   deltaDesiredHeading: 2.5
   acceleration: 3
-  turnSpeed: 5
-  maxSpeed: 30
-  minSpeed: -10
-  speed: 2
+  turnSpeed: 60
+  maxSpeed: 4
+  minSpeed: -2
+  speed: 0
   desiredSpeed: 0
   heading: 0
   desiredHeading: 0
@@ -1672,6 +1715,19 @@ MonoBehaviour:
   unitAI: {fileID: 0}
   decorations: {fileID: 0}
   showLine: 0
+--- !u!114 &1996534399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996534395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad43fadcdf51d344d96d2e4d3e8b5996, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrol: 0
 --- !u!1001 &2022008185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1820,7 +1876,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132451626}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.3295727, y: -1.4779176, z: -3.2869594}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1903926308}

@@ -37,8 +37,17 @@ public static class Utils {
         while (angleDegrees < 0)
             angleDegrees += 360;
         return angleDegrees;
-
     }
+
+    public static float Degrees180(float angleDegrees)
+    {
+        while (angleDegrees > 180)
+            angleDegrees -= 360;
+        while (angleDegrees <= -180)
+            angleDegrees += 360;
+        return angleDegrees;
+    }
+
     public static float Cos(float degrees)
     { return Mathf.Cos(Mathf.Deg2Rad * degrees); }
 

@@ -13,7 +13,7 @@ public class SelectionMgr : MonoBehaviour
     internal Vector3 mousePosition;
     //public LayerMask selectableLayer;
     internal List<Entity381> entities;
-    int selectedEntityIndex = 0;
+    public int selectedEntityIndex = 0;
 
     Ray ray;
     RaycastHit hitData;
@@ -69,9 +69,12 @@ public class SelectionMgr : MonoBehaviour
     void SelectEntity(bool keepPrevious)
     {
         if (!keepPrevious) { UnselectAll(); }
-        selectedEntity = entities[selectedEntityIndex];
-        selectedEntity.gameObject.GetComponent<Entity381>().isSelected = true;
-        cameraMgr.GetComponent<CameraMgr>().FPChar = selectedEntity.gameObject;
+        if (selectedEntityIndex >= 0 && selectedEntityIndex < entities.Count)
+        {
+            selectedEntity = entities[selectedEntityIndex];
+            selectedEntity.gameObject.GetComponent<Entity381>().isSelected = true;
+            cameraMgr.GetComponent<CameraMgr>().FPChar = selectedEntity.gameObject;
+        }
     }
 
     void UnselectAll()

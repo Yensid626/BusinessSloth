@@ -6,6 +6,7 @@ public class ChangeOffice : MonoBehaviour
 {
     public float mySpawnChance = 1f; //changes how likely this object is to spawn, regardless of chance of Script calling it
     public bool overrideChildrenSpawnChances = false;
+    public bool allChildrenTogether = false;
     public bool chooseSingleItem = false; //if the spawnChance is met, only one item from all children will spawn in
     public float childrenSpawnChance = 0.0f; //how likely each child in this object is to spawn
     public int singleItemIndex = -1; //if set to -1, will choose a random item, otherwise will attempt to choose item at index
@@ -14,19 +15,20 @@ public class ChangeOffice : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (transform.parent.name != "Decorations")
+        GetChildren();
+        if (Random.Range(0.0f, 1.0f) <= mySpawnChance)
         {
-            GetDecorations();
-            DecorateOffice(childrenSpawnChance);
-        }
-        else
-        {
-            if (chooseSingleItem)
+            gameObject.SetActive(true);
+            if (!chooseSingleItem)
             {
-                GetChildren();
+                DecorateOffice(childrenSpawnChance);
+            }
+            else
+            {
                 ChooseItem();
             }
         }
+        //else { gameObject.SetActive(false); }
     }
 
     // Update is called once per frame
@@ -66,14 +68,18 @@ public class ChangeOffice : MonoBehaviour
     void DecorateOffice(float chance)
     {
         float comparison = chance;
+        if (allChildrenTogether)
+        { if (Random.Range(0.0f, 1.0f) <= chance) { chance = 1.0f; } else { chance = 0.0f; } }
         foreach (GameObject child in decorations)
         {
-            if (child.GetComponent<ChangeOffice>() != null && !overrideChildrenSpawnChances) { chance = child.GetComponent<ChangeOffice>().mySpawnChance; }
+            if (child.transform.GetComponent<ChangeOffice>() != null && !overrideChildrenSpawnChances)
+                { chance = child.transform.GetComponent<ChangeOffice>().mySpawnChance; }
             else { chance = comparison; }
-            if (Random.Range(0.0f, 1.0f) <= chance)
-                { child.SetActive(true); }
-            else
-                { child.SetActive(false); }
+            child.SetActive(Random.Range(0.0f, 1.0f) <= chance);
+            //if (Random.Range(0.0f, 1.0f) <= chance)
+            //    { child.SetActive(true); }
+            //else
+            //    { child.SetActive(false); }
         }
     }
 

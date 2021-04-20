@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CommandType { Move, Follow, Intercept };
+public enum CommandType { Move, Follow, Intercept};
 
 public class UnitAI : MonoBehaviour
 {
@@ -11,14 +11,19 @@ public class UnitAI : MonoBehaviour
     internal GameObject line;
     public bool patrol = false;
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
+    {
+        if (line == null) { line = new GameObject(); }
+    }
+
+        void Start()
     {
         commands.Clear();
         commands.TrimExcess();
-        line = new GameObject();
+        //if (line == null) { line = new GameObject(); }
         line.AddComponent<LineRenderer>();
         line.transform.parent = transform;
-        line.name = "LineObject";
+        line.name = "LineObject-AI";
         line.SetActive(false);
     }
 
@@ -40,8 +45,9 @@ public class UnitAI : MonoBehaviour
             }
             else
             {
+                Debug.Log("Command FInished");
                 commands[0].Stop();
-                if (patrol) { AddCommand(commands[0]); }
+                if (patrol) { AddCommand(new Command(commands[0].me, commands[0].command, commands[0].targetPos, commands[0].targetEntity)); }
                 commands.RemoveAt(0);
             }
             int i = 0;
@@ -73,7 +79,8 @@ public class UnitAI : MonoBehaviour
 
     internal void AddCommand(Command c)
     {
-        commands.Add(c);
+        commands.Insert(commands.Count,c);
+        //commands.Add(c);
         line.GetComponent<LineRenderer>().positionCount = commands.Count + 2;
         //print("Command added!");
         //Add command to list
@@ -83,9 +90,9 @@ public class UnitAI : MonoBehaviour
 
 public class Command
 {
-    CommandType command;
+    internal CommandType command;
     Vector3 mousePos = Vector3.zero;
-    GameObject targetEntity = null;
+    internal GameObject targetEntity = null;
     internal GameObject me = null;
     internal Vector3 targetPos = Vector3.zero;
     internal Vector3 endPos = Vector3.zero;
@@ -115,13 +122,29 @@ public class Command
         this.targetPos = obj.transform.position;
         Init();
     }
+    public Command(GameObject entity381, CommandType c, Vector3 pos, GameObject obj)
+    {
+        this.me = entity381;
+        this.command = c;
+        if (pos != null)
+        {
+            this.mousePos = pos;
+            this.targetPos = pos;
+        }
+        if (obj != null)
+        {
+            this.targetEntity = obj;
+            this.targetPos = obj.transform.position;
+        }
+        Init();
+    }
 
     public void Init()
     {
         finished = false;
         enabled = false;
         //line = new GameObject();
-        line = me.transform.GetComponent<UnitAI>().line.transform.GetComponent<LineRenderer>();
+        //line = me.transform.GetComponent<UnitAI>().line.transform.GetComponent<LineRenderer>();
         //line.transform.parent = me.transform.parent.transform;
         //line.AddComponent<LineRenderer>();
         //line.positionCount = 3;
@@ -201,10 +224,12 @@ public class Command
 
     void drawLine(Vector3 start, Vector3 end, string material, int index)
     {
+        /*
         line.SetPosition(index, start);
         line.SetPosition(index+1, end);
         line.startWidth = 0.25f;
         line.endWidth = 0.25f;
         line.material = Resources.Load("LineMaterials/"+material, typeof(Material)) as Material;
+        */
     }
 }

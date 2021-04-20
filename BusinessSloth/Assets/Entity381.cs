@@ -8,8 +8,8 @@ public class Entity381 : MonoBehaviour
     public float deltaDesiredHeading = 2.5f; //How much the desired heading is changed each key press
     public float acceleration = 1;
     public float turnSpeed = 1;
-    public float maxSpeed = 30;
-    public float minSpeed = -10;
+    public float maxSpeed = 5;
+    public float minSpeed = -2;
     public float speed;
     public float desiredSpeed;
     public float heading;
@@ -25,20 +25,21 @@ public class Entity381 : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        OrientedPhysics381 = gameObject.GetComponent<OrientedPhysics>();
+        OrientedPhysics381 = transform.GetComponent<OrientedPhysics>();
         if (!(OrientedPhysics381 != null))
         {
-            OrientedPhysics381 = gameObject.AddComponent<OrientedPhysics>();
+            OrientedPhysics381 = transform.gameObject.AddComponent<OrientedPhysics>();
         }
-        unitAI = gameObject.GetComponent<UnitAI>();
+        unitAI = transform.GetComponent<UnitAI>();
         if (!(unitAI != null))
         {
-            unitAI = gameObject.AddComponent<UnitAI>();
+            unitAI = transform.gameObject.AddComponent<UnitAI>();
         }
     }
     void Start()
     {
         addLine();
+        addPatrol();
     }
 
     // Update is called once per frame
@@ -49,55 +50,14 @@ public class Entity381 : MonoBehaviour
     {
         if (showLine)
         {
-            line.transform.GetComponent<LineRenderer>().positionCount = 2;
-            drawLine(transform.position, transform.position + Utils.getPositionFromAngle(heading, speed * 2), "Display", 0);
-            line.SetActive(isSelected);
+            //line.transform.GetComponent<LineRenderer>().positionCount = 2;
+            //drawLine(transform.position, transform.position + Utils.getPositionFromAngle(heading, speed * 2), "Display", 0);
+            //line.SetActive(isSelected);
         }
         //decorations.SetActive(isSelected);
-        //if (isSelected) ProcessInput();
-        //OrientedPhysics381.Tick(dt);
-        //unitAI.Tick(dt);
-        transform.localPosition += transform.TransformDirection(Vector3.forward * dt * 1.2f);
-    }
-
-    void ProcessInput()
-    {
-        if (!unitAI.followingCommand)
-        {
-            float speedMuliplier = 1;
-            if (Input.GetKey(KeyCode.LeftShift)) { speedMuliplier = 2; }
-
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-                desiredHeading -= deltaDesiredHeading * speedMuliplier;
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                desiredHeading += deltaDesiredHeading * speedMuliplier;
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-                desiredSpeed += deltaDesiredSpeed * speedMuliplier;
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-                desiredSpeed -= deltaDesiredSpeed * speedMuliplier;
-
-            if (Input.GetKey(KeyCode.Space))
-            {
-                desiredSpeed = 0;
-                desiredHeading = (int)heading - ((int)heading % deltaDesiredHeading);
-            }
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            Vector3 mousePos = GetMousePos();
-            GameObject tempEntity = ClickEntity();
-            if (tempEntity != null)
-            {
-                if (Input.GetKey(KeyCode.LeftControl))
-                { unitAI.SetCommand(new Command(transform.gameObject, CommandType.Intercept, tempEntity));}
-                else
-                { unitAI.SetCommand(new Command(transform.gameObject, CommandType.Follow, tempEntity));}
-            }
-            else if (mousePos != Vector3.positiveInfinity)
-            {
-                unitAI.SetCommand(new Command(transform.gameObject, CommandType.Move, mousePos));
-            }
-        }
+        OrientedPhysics381.Tick(dt);
+        unitAI.Tick(dt);
+        //transform.localPosition += transform.TransformDirection(Vector3.forward * dt * 1.2f);
     }
 
     Vector3 GetMousePos()
@@ -150,5 +110,15 @@ public class Entity381 : MonoBehaviour
         line.transform.parent = transform;
         line.name = "LineObject";
         line.SetActive(false);
+    }
+
+    void addPatrol()
+    {
+        unitAI.patrol = true;
+        //unitAI.SetCommand(new Command(gameObject, CommandType.Move, transform.position));
+        unitAI.SetCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, -11.54f)));
+        unitAI.AddCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, -1.48f)));
+        unitAI.AddCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, -6.26f)));
+        unitAI.AddCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, 5.17f)));
     }
 }

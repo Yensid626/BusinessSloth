@@ -34,17 +34,17 @@ public class OrientedPhysics : MonoBehaviour
         entity.heading = transform.rotation.eulerAngles.y;
         float dH = Utils.AngleDiffPosNeg(entity.desiredHeading, entity.heading);
         float tempMultiplier = 1;
-        if (Mathf.Abs(dH) < 0.1f) { tempMultiplier = 0.8f; }
-        if (Mathf.Abs(dH) < 0.05) { tempMultiplier = 0.1f; }
+        //if (Mathf.Abs(dH) < 1f) { tempMultiplier = 0.9f; }
+        //if (Mathf.Abs(dH) < 0.5f) { tempMultiplier = 0.7f; }
+        if (Mathf.Abs(dH) <= 4 * entity.turnSpeed * turnSpeedMultiplier * dt) { tempMultiplier = 0.2f; } //less than 4 frames away
+        if (Mathf.Abs(dH) <= 2 * entity.turnSpeed * turnSpeedMultiplier * dt) { tempMultiplier = 0.1f; } //less than 2 frames away
+        if (Mathf.Abs(dH) <= 1 * entity.turnSpeed * turnSpeedMultiplier * dt) { tempMultiplier = 0.05f; } //less than 1 frame away
+        Debug.Log(dH + ":" + (entity.turnSpeed * dt * turnSpeedMultiplier));
+        Debug.Log("   " + tempMultiplier);
         if ((dH > 0) && (dH <= 180))
         { transform.Rotate(new Vector3(0, entity.turnSpeed * dt * turnSpeedMultiplier * tempMultiplier, 0)); }
         else if (!Utils.ApproximatelyEqual(dH,0))
         { transform.Rotate(new Vector3(0, -entity.turnSpeed * dt * turnSpeedMultiplier * tempMultiplier, 0)); }
-        /*float dH = desiredHeading - heading;
-        if (((dH > 0) && (dH <= 180)) || (dH < -180))
-            { transform.Rotate(new Vector3(0, turnSpeed * dt * 5, 0)); }
-        else 
-            { transform.Rotate(new Vector3(0, -turnSpeed * dt * 5, 0)); }*/
 
         //accelerate
         if (Utils.ApproximatelyEqual(entity.speed, entity.desiredSpeed))
@@ -65,7 +65,7 @@ public class OrientedPhysics : MonoBehaviour
         Vector3 velocity;
         //velocity = new Vector3(Utils.Sin(entity.heading), 0, Utils.Cos(entity.heading));
         velocity = Utils.getPositionFromAngle(entity.heading, entity.speed * dt);
-        entity.transform.position = entity.transform.localPosition + velocity;
+        entity.transform.localPosition = entity.transform.localPosition + velocity;
         //entity.transform.position = entity.transform.localPosition + (velocity * entity.speed * dt);
     }
 }
