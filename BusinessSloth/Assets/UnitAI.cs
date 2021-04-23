@@ -7,24 +7,21 @@ public enum CommandType { Move, Follow, Intercept};
 public class UnitAI : MonoBehaviour
 {
     public List<Command> commands = new List<Command>();
-    internal bool followingCommand = false;
-    internal GameObject line;
+    public bool followingCommand = false;
+    public GameObject line;
     public bool patrol = false;
+    public int count;
     // Start is called before the first frame update
     private void Awake()
     {
-        if (line == null) { line = new GameObject(); }
+        addLine();
+        //line.AddComponent<LineRenderer>();
     }
 
         void Start()
     {
         commands.Clear();
         commands.TrimExcess();
-        //if (line == null) { line = new GameObject(); }
-        line.AddComponent<LineRenderer>();
-        line.transform.parent = transform;
-        line.name = "LineObject-AI";
-        line.SetActive(false);
     }
 
     // Update is called once per frame
@@ -33,6 +30,8 @@ public class UnitAI : MonoBehaviour
 
     internal void Tick(float dt)
     {
+        //print("List: " + commands.Count);
+        count = commands.Count;
         if (commands.Count >= 1)
         {
             //print("running command");
@@ -45,7 +44,7 @@ public class UnitAI : MonoBehaviour
             }
             else
             {
-                Debug.Log("Command FInished");
+                Debug.Log("Command Finished");
                 commands[0].Stop();
                 if (patrol) { AddCommand(new Command(commands[0].me, commands[0].command, commands[0].targetPos, commands[0].targetEntity)); }
                 commands.RemoveAt(0);
@@ -72,7 +71,7 @@ public class UnitAI : MonoBehaviour
             commands.RemoveAt(0);
             commands.TrimExcess();
         }
-        //print("Commands removed!");
+        Debug.Log("Commands removed!");
         AddCommand(c);
         //empty command list and set in new Command
     }
@@ -80,11 +79,21 @@ public class UnitAI : MonoBehaviour
     internal void AddCommand(Command c)
     {
         commands.Insert(commands.Count,c);
+        Debug.Log("Command #" + commands.Count);
         //commands.Add(c);
         line.GetComponent<LineRenderer>().positionCount = commands.Count + 2;
-        //print("Command added!");
+        Debug.Log("Command added!");
         //Add command to list
         //only add if player is holding left shift and right clicks
+    }
+
+    void addLine()
+    {
+        if (line == null) { line = new GameObject(); }
+        line.AddComponent<LineRenderer>();
+        line.transform.parent = transform;
+        line.name = "LineObject-AI2";
+        line.SetActive(false);
     }
 }
 
@@ -151,6 +160,7 @@ public class Command
         startPos = me.transform.position;
         drawLine(me.transform.position, targetPos, "NA", 0);
         drawLine(targetPos, targetPos, "NA", 1);
+        Debug.Log("Command Initialized To: " + command);
     }
 
     public void Tick(float dt)
@@ -205,6 +215,7 @@ public class Command
         finished = true;
         me.GetComponent<Entity381>().desiredHeading = Utils.RoundToNearest(me.GetComponent<Entity381>().heading, me.GetComponent<Entity381>().deltaDesiredHeading);
         me.GetComponent<Entity381>().desiredSpeed = 0;
+        Debug.Log("Command Stopped Doing: " + command);
         //UnityEngine.Object.DestroyObject(line, 0);
     }
 

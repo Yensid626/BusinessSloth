@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class EntityMgr : MonoBehaviour
 {
+    public GameObject people;
+    public GameObject cubicle;
     public GameObject cameraMgr;
-    public GameObject entities;
     public GameObject selectionMgr;
-    public List<Entity381> entitiesPhysics = new List<Entity381>();
+    public List<Entity381> entitiesPeople = new List<Entity381>();
+    public List<GameObject> entitiesObjects = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
     {
+        GetMovablePeople();
         GetMovableEntities();
     }
     //public List<GameObject> CubeEntities;
@@ -44,24 +47,24 @@ public class EntityMgr : MonoBehaviour
 
     void TickEntities(float dt)
     {
-        foreach (Entity381 ent in entitiesPhysics)
+        foreach (Entity381 ent in entitiesPeople)
         {
             ent.Tick(dt);
         }
     }
 
-    void GetMovableEntities()
+    void GetMovablePeople()
     {
-        entitiesPhysics.Clear();
-        entitiesPhysics.TrimExcess();
-        foreach (Transform child in entities.transform)
+        entitiesPeople.Clear();
+        entitiesPeople.TrimExcess();
+        foreach (Transform child in people.transform)
         {
             //print("For each child: " + child.name);
             //print("    and parent: " + child.parent.gameObject.GetComponents<ShipPhysics>());
             if (child.gameObject.GetComponents<Entity381>() != null)
             {
                 //print("   Found Component [Ship]");
-                entitiesPhysics.Add(child.gameObject.GetComponent<Entity381>());
+                entitiesPeople.Add(child.gameObject.GetComponent<Entity381>());
             }
             else
             {
@@ -69,6 +72,18 @@ public class EntityMgr : MonoBehaviour
             }
             //entitiesPhysics.Add(child.gameObject.GetComponent<PhysicsAndInput>());
             //entitiesPhysics.Add(child.GetComponent<PhysicsAndInput>());
+        }
+    }
+
+    void GetMovableEntities()
+    {
+        entitiesObjects.Clear();
+        entitiesObjects.TrimExcess();
+        foreach (Transform child in cubicle.transform.Find("Decorations").transform)
+        {
+            //print("   Found Component [Ship]");
+            entitiesObjects.Add(child.gameObject);
+            if (child.gameObject.GetComponent<BoxCollider>() == null) { child.gameObject.AddComponent<BoxCollider>(); }
         }
     }
 

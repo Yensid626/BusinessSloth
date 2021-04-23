@@ -39,8 +39,8 @@ public class OrientedPhysics : MonoBehaviour
         if (Mathf.Abs(dH) <= 4 * entity.turnSpeed * turnSpeedMultiplier * dt) { tempMultiplier = 0.2f; } //less than 4 frames away
         if (Mathf.Abs(dH) <= 2 * entity.turnSpeed * turnSpeedMultiplier * dt) { tempMultiplier = 0.1f; } //less than 2 frames away
         if (Mathf.Abs(dH) <= 1 * entity.turnSpeed * turnSpeedMultiplier * dt) { tempMultiplier = 0.05f; } //less than 1 frame away
-        Debug.Log(dH + ":" + (entity.turnSpeed * dt * turnSpeedMultiplier));
-        Debug.Log("   " + tempMultiplier);
+        //Debug.Log(dH + ":" + (entity.turnSpeed * dt * turnSpeedMultiplier));
+        //Debug.Log("   " + tempMultiplier);
         if ((dH > 0) && (dH <= 180))
         { transform.Rotate(new Vector3(0, entity.turnSpeed * dt * turnSpeedMultiplier * tempMultiplier, 0)); }
         else if (!Utils.ApproximatelyEqual(dH,0))

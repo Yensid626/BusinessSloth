@@ -114,6 +114,7 @@ public class Entity381 : MonoBehaviour
 
     void addPatrol()
     {
+        Debug.Log("Partol Added");
         unitAI.patrol = true;
         //unitAI.SetCommand(new Command(gameObject, CommandType.Move, transform.position));
         unitAI.SetCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, -11.54f)));

@@ -6,24 +6,23 @@ public class SelectionMgr : MonoBehaviour
 {
     public GameObject entityMgr;
     public GameObject cameraMgr;
-    public Entity381 selectedEntity;
+    public GameObject selectedEntity;
     private GameObject tempEntity;
-    internal bool intercept; //if false: follow, if true: intercept
     //internal Vector3 movePosition;
     internal Vector3 mousePosition;
     //public LayerMask selectableLayer;
-    internal List<Entity381> entities;
-    public int selectedEntityIndex = 0;
+    //internal List<GameObject> entities;
+    //public int selectedEntityIndex = 0;
+    public float timer;
 
-    Ray ray;
-    RaycastHit hitData;
-    GameObject hitObject;
+    //GameObject hitObject;
 
     // Start is called before the first frame update
     void Start()
     {
-        entities = entityMgr.GetComponent<EntityMgr>().entitiesPhysics;
-        SelectEntity(false);
+        //entities = entityMgr.GetComponent<EntityMgr>().entitiesPeople;
+        //SelectEntity(false);
+        timer = 0;
     }
 
     // Update is called once per frame
@@ -32,10 +31,20 @@ public class SelectionMgr : MonoBehaviour
 
     internal void Tick(float dt)
     {
-        ProcessInput();
+        //ProcessInput();
+        if (timer >= 1)
+        {
+            timer = 0;
+            tempEntity = GetMouseOver();
+            if (tempEntity != null)
+            {
+                selectedEntity = tempEntity;
+            }
+        }
+        timer += dt;
     }
 
-    void ProcessInput()
+    /*void ProcessInput()
     {
 
         if (Input.GetKeyUp(KeyCode.Tab))
@@ -46,7 +55,7 @@ public class SelectionMgr : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            tempEntity = ClickEntity();
+            tempEntity = GetMouseEntity();
             if (tempEntity != null)
             {
                 selectedEntity = tempEntity.GetComponent<Entity381>();
@@ -86,9 +95,9 @@ public class SelectionMgr : MonoBehaviour
     }
 
     public int IndexEntity(Entity381 ent)
-    { return entities.IndexOf(selectedEntity); }
+    { return entities.IndexOf(selectedEntity); } */
 
-    public GameObject ClickEntity()
+    public GameObject GetMouseEntity()
     {
         mousePosition = GetMousePos();
         GameObject entity = null;
@@ -96,7 +105,7 @@ public class SelectionMgr : MonoBehaviour
         {
             float shortestDist = 5.5f;
             float dist;
-            foreach (Entity381 ent in entityMgr.GetComponent<EntityMgr>().entitiesPhysics)
+            foreach (Entity381 ent in entityMgr.GetComponent<EntityMgr>().entitiesPeople)
             {
                 dist = Utils.getDist(mousePosition, ent.transform.position);
                 //dist = Vector3.Distance(mousePosition, ent.transform.position);
@@ -136,15 +145,32 @@ public class SelectionMgr : MonoBehaviour
         }
     }*/
 
+    Ray ray;
+    RaycastHit hitData;
     Vector3 GetMousePos()
     {
-        Plane plane = new Plane(Vector3.up, 0);
+        //Plane plane = new Plane(Vector3.up, 0);
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //float distance;
-        if (plane.Raycast(ray, out float distance))
+        //if (plane.Raycast(ray, out float distance))
+        if (Physics.Raycast(ray, out hitData, 1000))
         {
-            return ray.GetPoint(distance);
+            return hitData.point;
         }
         return Vector3.positiveInfinity;
+    }
+
+    GameObject GetMouseOver()
+    {
+        //Plane plane = new Plane(Vector3.up, 0);
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //float distance;
+        //if (plane.Raycast(ray, out float distance))
+        if (Physics.Raycast(ray, out hitData, 1000))
+        {
+            //Debug.Log(hitData.transform.gameObject.name);
+            return hitData.transform.gameObject;
+        }
+        return null;
     }
 }
