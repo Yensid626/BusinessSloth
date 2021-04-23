@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -439,6 +439,26 @@ Transform:
   m_Father: {fileID: 1176920060}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &701031062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7719484250331933277, guid: cf040923fa1f6a84daeac6fd79ec00ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 958588231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &701031068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701031062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4411a3e8a0374324a8fc7810826e3158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraMgr: {fileID: 47890826}
+  rotateSpeed: 5
 --- !u!1001 &828008875
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1813,7 +1833,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deltaDesiredSpeed: 5
   deltaDesiredHeading: 2.5
-  acceleration: 3
+  acceleration: 4
   turnSpeed: 60
   maxSpeed: 4
   minSpeed: -2
@@ -1838,8 +1858,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad43fadcdf51d344d96d2e4d3e8b5996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followingCommand: 0
+  line: {fileID: 0}
   patrol: 0
-  count: 100
 --- !u!1001 &2022008185
 PrefabInstance:
   m_ObjectHideFlags: 0

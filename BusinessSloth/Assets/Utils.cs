@@ -78,23 +78,22 @@ public static class Utils {
         //return Mathf.Sqrt(sum.x + sum.y + sum.z);
     }
 
-    public static float RoundToNearest(float value, float to)
+    public static float RoundToNearest(float value, float step)
     {
         float multiplier = 1.0f;
-        while (to < 1) { to *= 10; multiplier++; }
+        while (step < 1) { step *= 10; multiplier++; }
         float adjustedVal = value * multiplier;
-        return ((adjustedVal) - (adjustedVal % to))/multiplier;
+        return ((adjustedVal) - (adjustedVal % step))/multiplier;
     }
 
     public static float differenceDegrees(float deg1, float deg2)
     {
-        return 1 - (Mathf.Abs(Utils.AngleDiffPosNeg(deg1, deg2) / 180)); 
+        return 1 - (Mathf.Abs(Utils.AngleDiffPosNeg(deg1, deg2) / 180)); //find absolute difference between deg1 and 2 (will always be between 0-180) and map between (1-0)
     }
 
     //public static float exponentialScaler(float currentMin, float currentMax, float newMin, float newMax, float value)
-    public static float exponentialMap(float currentMin, float currentMax, float newMin, float newMax, float value)
+    public static float exponentialMap(float currentMin, float currentMax, float newMin, float newMax, float value, float curve = 3)
     {
-        float curve = 3;
         return (Mathf.Pow((value - currentMin) / (currentMax - currentMin), curve) * (newMax-newMin)) + newMin;
     }
 
@@ -103,7 +102,7 @@ public static class Utils {
         return new Vector3(Utils.Sin(heading) * speed, 0, Utils.Cos(heading) * speed);
     }
 
-    public static Vector3 get2DIntercept(Vector3 point2a, Vector3 point1a, Vector3 point2b, Vector3 point1b)
+    /*public static Vector3 get2DIntercept(Vector3 point2a, Vector3 point1a, Vector3 point2b, Vector3 point1b)
     {
         float slopeA = (point1a.z - point2a.z)/ (point1a.x - point2a.x);
         float slopeB = (point1b.z - point2b.z) / (point1b.x - point2b.x);
@@ -111,5 +110,5 @@ public static class Utils {
         float offsetB = point1b.z - (point1b.x * slopeB);
         float intercept = (offsetB - offsetA) / (slopeA - slopeB);
         return new Vector3(intercept, 0, (intercept * slopeA) + offsetA);
-    }
+    }*/
 }
