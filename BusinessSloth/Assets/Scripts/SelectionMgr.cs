@@ -39,7 +39,7 @@ public class SelectionMgr : MonoBehaviour
         if ((Input.GetMouseButtonDown(0)))
         {
             if ((selectedEntity = GetMouseOver()) != null)
-                { Score.inst.AddPoints(1); }
+                { selectedEntity.GetComponent<Points>().AddPoints(); }
         }
     }
     /*void ProcessInput()

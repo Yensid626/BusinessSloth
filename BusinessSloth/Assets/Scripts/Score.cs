@@ -30,11 +30,13 @@ public class Score : MonoBehaviour
 
     public void AddPoints(float amount)
     {
-        scoreAmount += (amount > 0 ? amount : 0); //if amount is greater than 0, add that amount, otherwise add 0 points
+        scoreAmount += amount;
+        //scoreAmount += (amount > 0 ? amount : 0); //if amount is greater than 0, add that amount, otherwise add 0 points
     }
 
     public void RemovePoints(float amount)
     {
-        scoreAmount -= (amount > 0 ? amount : 0); //if amount is greater than 0, subtract that amount, otherwise subtract 0 points
+        scoreAmount -= amount;
+        //scoreAmount -= (amount > 0 ? amount : 0); //if amount is greater than 0, subtract that amount, otherwise subtract 0 points
     }
 }
