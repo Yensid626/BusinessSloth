@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2091,7 +2091,7 @@ MonoBehaviour:
   deltaDesiredSpeed: 5
   deltaDesiredHeading: 2.5
   acceleration: 4
-  turnSpeed: 60
+  turnSpeed: 55
   maxSpeed: 4
   minSpeed: -2
   speed: 0
@@ -2575,6 +2575,11 @@ PrefabInstance:
         type: 3}
       propertyPath: farClipping
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7236615757827168082, guid: 3af27645a32c8b746a7d2afc3895e70c,
+        type: 3}
+      propertyPath: visible
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8155630549212633335, guid: 3af27645a32c8b746a7d2afc3895e70c,
         type: 3}
