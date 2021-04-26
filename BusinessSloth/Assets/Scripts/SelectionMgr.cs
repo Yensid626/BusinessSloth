@@ -31,19 +31,17 @@ public class SelectionMgr : MonoBehaviour
 
     internal void Tick(float dt)
     {
-        //ProcessInput();
-        if (timer >= 1)
-        {
-            timer = 0;
-            tempEntity = GetMouseOver();
-            if (tempEntity != null)
-            {
-                selectedEntity = tempEntity;
-            }
-        }
-        timer += dt;
+        ProcessInput();
     }
 
+    void ProcessInput()
+    {
+        if ((Input.GetMouseButtonDown(0)))
+        {
+            if ((selectedEntity = GetMouseOver()) != null)
+                { Score.inst.AddPoints(1); }
+        }
+    }
     /*void ProcessInput()
     {
 
@@ -169,7 +167,10 @@ public class SelectionMgr : MonoBehaviour
         if (Physics.Raycast(ray, out hitData, 1000))
         {
             //Debug.Log(hitData.transform.gameObject.name);
-            return hitData.transform.gameObject;
+            foreach (GameObject ent in entityMgr.GetComponent<EntityMgr>().entitiesObjects)
+            {
+                if (ent == hitData.transform.gameObject) { return hitData.transform.gameObject; }
+            }
         }
         return null;
     }

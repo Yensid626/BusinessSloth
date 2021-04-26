@@ -54,6 +54,9 @@ public static class Utils {
     public static float Sin(float degrees)
     { return Mathf.Sin(Mathf.Deg2Rad * degrees); }
 
+    public static float Tan(float degrees)
+    { return Mathf.Tan(Mathf.Deg2Rad * degrees); }
+
     public static float Atan(float x, float y)
     { return Utils.Degrees360(Mathf.Rad2Deg * Mathf.Atan2(x, y)); }
 

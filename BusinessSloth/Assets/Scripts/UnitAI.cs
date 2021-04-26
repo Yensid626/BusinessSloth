@@ -10,6 +10,7 @@ public class UnitAI : MonoBehaviour
     public bool followingCommand = false;
     public GameObject line;
     public bool patrol = false;
+    public int count;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -33,6 +34,7 @@ public class UnitAI : MonoBehaviour
 
     internal void Tick(float dt)
     {
+        count = commands.Count;
         if (commands.Count >= 1)
         {
             followingCommand = true;
