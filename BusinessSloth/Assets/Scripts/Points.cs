@@ -10,6 +10,7 @@ public class Points : MonoBehaviour
 
     void Start() { }
     public int points = 0; //how many points the user recieves from clicking
+    //public int suspision = 1;
 
     public void AddPoints()
     {

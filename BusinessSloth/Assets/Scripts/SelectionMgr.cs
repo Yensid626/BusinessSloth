@@ -16,7 +16,11 @@ public class SelectionMgr : MonoBehaviour
     public float timer;
     public float multiplier;
 
-    //GameObject hitObject;
+    public static SelectionMgr inst;
+    private void Awake()
+    {
+        inst = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +51,7 @@ public class SelectionMgr : MonoBehaviour
             { selectedEntity.GetComponent<Points>().AwardPoints(multiplier); }
             else { multiplier = 1; }
         }
-        if (Input.GetMouseButtonUp(0)) { timer += 1; }
+        if (Input.GetMouseButtonUp(0)) { timer += 1;}
         timer += dt;
     }
     /*void ProcessInput()

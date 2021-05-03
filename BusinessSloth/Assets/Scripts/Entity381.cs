@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class Entity381 : MonoBehaviour
 {
-    public float deltaDesiredSpeed = 5; //How much the desired speed is changed each key press
-    public float deltaDesiredHeading = 2.5f; //How much the desired heading is changed each key press
-    public float acceleration = 1;
-    public float turnSpeed = 1;
-    public float maxSpeed = 5;
-    public float minSpeed = -2;
+    internal float deltaDesiredSpeed = 5; //How much the desired speed is changed each key press
+    internal float deltaDesiredHeading = 2.5f; //How much the desired heading is changed each key press
+    public float suspision;
+    public float acceleration = 4;
+    public float turnSpeed = 55;
+    public float maxSpeed = 3.5f;
+    public float minSpeed = -1.5f;
     public float speed;
-    public float desiredSpeed;
+    internal float desiredSpeed;
     public float heading;
-    public float desiredHeading;
-    public bool isSelected = false;
+    internal float desiredHeading;
+    internal bool isSelected = false;
+    public List<Vector3> points = new List<Vector3>();
     public OrientedPhysics OrientedPhysics381;
     public UnitAI unitAI;
+    public AIVision AIVision;
 
     public GameObject decorations;
 
@@ -35,6 +38,12 @@ public class Entity381 : MonoBehaviour
         {
             unitAI = transform.gameObject.AddComponent<UnitAI>();
         }
+        AIVision = transform.GetComponent<AIVision>();
+        if (!(AIVision != null))
+        {
+            AIVision = transform.gameObject.AddComponent<AIVision>();
+        }
+        suspision = 0;
     }
     void Start()
     {
@@ -57,6 +66,7 @@ public class Entity381 : MonoBehaviour
         //decorations.SetActive(isSelected);
         OrientedPhysics381.Tick(dt);
         unitAI.Tick(dt);
+        AIVision.Tick(dt);
         //transform.localPosition += transform.TransformDirection(Vector3.forward * dt * 1.2f);
     }
 
@@ -116,12 +126,19 @@ public class Entity381 : MonoBehaviour
     {
         unitAI.patrol = true;
         //unitAI.SetCommand(new Command(gameObject, CommandType.Move, transform.position));
-        unitAI.SetCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, -11.54f)));
-        unitAI.AddCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, -1.48f)));
-        unitAI.AddCommand(new Command(gameObject, CommandType.Wait, new Vector3(2.0f, 0,0)));
-        unitAI.AddCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, -6.26f)));
-        unitAI.AddCommand(new Command(gameObject, CommandType.Wait, new Vector3(0.25f, 0, 0)));
-        unitAI.AddCommand(new Command(gameObject, CommandType.Move, new Vector3(4.07f, 0.0f, 5.17f)));
+        foreach (Vector3 p in points)
+        {
+            if (p.y == -1)
+            {
+                unitAI.AddCommand(new Command(gameObject, CommandType.Wait, new Vector3(p.x, 0, 0)));
+                //Debug.Log("Wait For:" + p.x);
+            }
+            else
+            {
+                unitAI.AddCommand(new Command(gameObject, CommandType.Move, new Vector3(p.x, p.y, p.z)));
+                //Debug.Log("Go To:" + p.x + ", " + p.y + ", " + p.z);
+            }
+        }
         //Debug.Log("Patrol Added");
     }
     
