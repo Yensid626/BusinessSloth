@@ -38,7 +38,7 @@ public class Score : MonoBehaviour
 
     public void RemovePoints(float amount)
     {
-        scoreAmount -= amount;
+        scoreAmount += amount;
         //scoreAmount -= (amount > 0 ? amount : 0); //if amount is greater than 0, subtract that amount, otherwise subtract 0 points
     }
 

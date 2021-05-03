@@ -20,4 +20,18 @@ public class Points : MonoBehaviour
     {
         Score.inst.RemovePoints(points);
     }
+
+    public void AwardPoints()
+    {
+        AwardPoints(1);
+    }
+    public void AwardPoints(float multiplier)
+    {
+        if (points < 0)
+        {
+            Score.inst.RemovePoints(Utils.Round(points * multiplier, 0));
+            return;
+        }
+        Score.inst.AddPoints(Utils.Round(points * multiplier, 0));
+    }
 }

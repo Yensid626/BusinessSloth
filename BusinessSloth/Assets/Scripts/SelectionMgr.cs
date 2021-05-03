@@ -14,6 +14,7 @@ public class SelectionMgr : MonoBehaviour
     //internal List<GameObject> entities;
     //public int selectedEntityIndex = 0;
     public float timer;
+    public float multiplier;
 
     //GameObject hitObject;
 
@@ -23,6 +24,7 @@ public class SelectionMgr : MonoBehaviour
         //entities = entityMgr.GetComponent<EntityMgr>().entitiesPeople;
         //SelectEntity(false);
         timer = 0;
+        multiplier = 1;
     }
 
     // Update is called once per frame
@@ -31,16 +33,22 @@ public class SelectionMgr : MonoBehaviour
 
     internal void Tick(float dt)
     {
-        ProcessInput();
+        ProcessInput(dt);
     }
 
-    void ProcessInput()
+    void ProcessInput(float dt)
     {
-        if ((Input.GetMouseButtonDown(0)))
+        if (!Input.GetMouseButton(0)) { multiplier = 1; }
+        if ((Input.GetMouseButton(0)) && timer >= 0.3)
         {
+            timer = 0;
+            multiplier += dt;
             if ((selectedEntity = GetMouseOver()) != null)
-                { selectedEntity.GetComponent<Points>().AddPoints(); }
+            { selectedEntity.GetComponent<Points>().AwardPoints(multiplier); }
+            else { multiplier = 1; }
         }
+        if (Input.GetMouseButtonUp(0)) { timer += 1; }
+        timer += dt;
     }
     /*void ProcessInput()
     {
