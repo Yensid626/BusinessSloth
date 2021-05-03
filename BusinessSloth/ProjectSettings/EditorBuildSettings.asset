@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Office-Daytime.unity
     guid: c57d8608a69f3044da45cdfe222a61a0
+  - enabled: 1
+    path: Assets/Scenes/GameOverMenu.unity
+    guid: cd2acfa92d0faef469b838e566c5d259
   m_configObjects: {}

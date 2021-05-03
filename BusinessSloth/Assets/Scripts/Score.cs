@@ -7,6 +7,7 @@ public class Score : MonoBehaviour
 {
     public Text scoreText;
     public float scoreAmount;
+    public GameOverScreen GameOver;
     //public float pointsPerSecond;
 
     public static Score inst;
@@ -26,6 +27,7 @@ public class Score : MonoBehaviour
     {
         scoreText.text = "Points: " + (int)scoreAmount;
         //scoreAmount += pointsPerSecond * Time.deltaTime;
+    
     }
 
     public void AddPoints(float amount)
@@ -39,4 +41,10 @@ public class Score : MonoBehaviour
         scoreAmount -= amount;
         //scoreAmount -= (amount > 0 ? amount : 0); //if amount is greater than 0, subtract that amount, otherwise subtract 0 points
     }
+
+    public float GetPoints()
+    {
+        return scoreAmount;
+    }
+    
 }
