@@ -612,6 +612,31 @@ PrefabInstance:
       propertyPath: GameOver
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3624764161714995404, guid: d2b539893ad5693459a35f2c260bdb30,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3624764161714995404, guid: d2b539893ad5693459a35f2c260bdb30,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3624764161714995404, guid: d2b539893ad5693459a35f2c260bdb30,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5328653316193202292, guid: d2b539893ad5693459a35f2c260bdb30,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 11.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449421809824047583, guid: d2b539893ad5693459a35f2c260bdb30,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.0800781
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2b539893ad5693459a35f2c260bdb30, type: 3}
 --- !u!1001 &405733589
