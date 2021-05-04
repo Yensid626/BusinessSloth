@@ -95,7 +95,7 @@ public class AIVision : MonoBehaviour
             if (selectedObject == null) { entity.suspision += 0.5f; return; }
             //entity.suspision += selectedObject.GetComponent<Points>().points;
             entity.suspision = Utils.Clamp(entity.suspision += selectedObject.GetComponent<Points>().points, -1, 10);
-            Debug.Log("Ha Found you Slacking Off");
+            //Debug.Log("Ha Found you Slacking Off");
         }
     }
 

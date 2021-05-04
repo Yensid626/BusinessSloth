@@ -47,9 +47,11 @@ public class SelectionMgr : MonoBehaviour
         {
             timer = 0;
             multiplier += dt;
-            if ((selectedEntity = GetMouseOver()) != null)
-            { selectedEntity.GetComponent<Points>().AwardPoints(multiplier); }
-            else { multiplier = 1; }
+            tempEntity = selectedEntity;
+            if (tempEntity != (selectedEntity = GetMouseOver()))
+                { multiplier = 1; }
+            if (selectedEntity != null)
+                { selectedEntity.GetComponent<Points>().AwardPoints(multiplier); }
         }
         if (Input.GetMouseButtonUp(0)) { timer += 1;}
         timer += dt;

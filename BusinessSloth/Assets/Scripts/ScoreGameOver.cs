@@ -14,7 +14,7 @@ public class ScoreGameOver : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Score.inst.GetPoints() <= -20)
+        if(Score.inst != null && Score.inst.GetPoints() <= -20)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
