@@ -131,6 +131,7 @@ public class Command
         this.command = c;
         this.targetEntity = obj;
         this.targetPos = obj.transform.position;
+        this.endPos = targetPos;
         Init();
     }
     public Command(GameObject entity381, CommandType c, Vector3 pos, GameObject obj)
@@ -181,8 +182,13 @@ public class Command
                     drawLine(targetPos, endPos, "Move", 1);
                     break;
                 case CommandType.Wait:
-                    mousePos.x -= dt; waiting = (mousePos.x > 0);
-                    targetPos = startPos + new Vector3(0, waiting ? 1.0f : 0.0f, 0);
+                    mousePos.x -= dt; waiting = true;
+                    if (mousePos.x <= 0)
+                    {
+                        Stop();
+                        return;
+                    }
+                    //targetPos = startPos + new Vector3(0, waiting ? 1.0f : 0.0f, 0);
                     drawLine(startPos, targetPos, "Wait", 0);
                     drawLine(targetPos, endPos, "Wait", 1);
                     //Debug.Log(waiting + ": " + mousePos.x);

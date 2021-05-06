@@ -11,6 +11,7 @@ public class AIVision : MonoBehaviour
     internal float farClipping = 12;
     internal float nearClipping = 0.2f;
     internal bool visible = false;
+    public Vector2 checkTime = new Vector2(0.5f,1.8f);
     internal List<LineRenderer> lines = new List<LineRenderer>();
     float cosAng;
     float sinAng;
@@ -22,6 +23,7 @@ public class AIVision : MonoBehaviour
     Transform p;
     Vector3 offset;
     GameObject folder;
+    public int index = 0;
 
     private Entity381 entity;
 
@@ -34,9 +36,9 @@ public class AIVision : MonoBehaviour
         folder = new GameObject("FOVLines");
         folder.transform.parent = transform;
         folder.transform.localPosition = new Vector3(0, 1.93f, 0);
-        Debug.Log(p.position);
-        Debug.Log(folder.transform.position);
-        Debug.Log(folder.transform.localPosition);
+        //Debug.Log(p.position);
+        //Debug.Log(folder.transform.position);
+        //Debug.Log(folder.transform.localPosition);
         if (transform.Find("FOV") != null)
         { folder.transform.position = transform.Find("FOV").transform.position; }
         //folder.transform.localScale = new Vector3(1, 1, 1);
@@ -72,7 +74,7 @@ public class AIVision : MonoBehaviour
         if (timer <= 0)
         {
             detectPlayer();
-            timer = Random.Range(0.4f, 1.6f);
+            timer = Random.Range(checkTime.x,checkTime.y);
         }
         timer -= dt;
     }
@@ -105,8 +107,9 @@ public class AIVision : MonoBehaviour
     RaycastHit hitData;
     void detectPlayer()
     {
-        for(int i = 0; i < players.Count; i++)
+        for(int i = index; i < players.Count; i++)
         {
+            index = (index < players.Count ? index : 0);
             GameObject player = castRayToObject(players[i]);
             if (player != null)
             {
@@ -122,48 +125,80 @@ public class AIVision : MonoBehaviour
                 {
                     if ((player.GetComponent<Entity381>() != null) && (Utils.getDist(entity.gameObject.transform.position, player.transform.position) <= gossipRange))
                     {
-                        Debug.Log("Yummy Gossip!");
-                        entity.pause = true;
-                        player.GetComponent<Entity381>().pause = true;
+                        //Debug.Log("Yummy Gossip Time!");
+                        PauseForGossip(entity, player.GetComponent<Entity381>());
+                        //entity.pause = true;
+                        //player.GetComponent<Entity381>().pause = true;
                         entity.suspision += player.GetComponent<Entity381>().suspision;
                         player.GetComponent<Entity381>().suspision = 0;
-                        Utils.Sleep(1.5f);
-                        entity.pause = false;
-                        player.GetComponent<Entity381>().pause = false;
+                        StartCoroutine(Utils.Sleep(3.5f));
+                        //Utils.Sleep(3.5f);
+                        //Invoke("FinishGossip", 5);
+                        //entity.pause = false;
+                        //player.GetComponent<Entity381>().pause = false;
+                        FinishGossip(entity, player.GetComponent<Entity381>());
+                        //Debug.Log("Finished Gossiping");
                     }
                     else
                     {
                         Debug.Log("Gossip Failed");
                     }
                 }
-
             }
+            index = (++index < players.Count ? index : 0);
+            break;
         }
+    }
+
+    public void PauseForGossip(Entity381 ent1, Entity381 ent2)
+    {
+        Debug.Log("Yummy Gossip Time!");
+        ent1.pause = true;
+        ent2.pause = true;
+    }
+    public void FinishGossip(Entity381 ent1, Entity381 ent2)
+    {
+        ent1.pause = false;
+        ent2.pause = false;
+        Debug.Log("Finished Gossiping");
     }
 
     internal GameObject castRayToObject(GameObject obj) // ####Folder Pos is this entitys eyesight!####
     {
         //Plane plane = new Plane(Vector3.up, 0);
-        ray = new Ray(folder.transform.position, obj.transform.position - folder.transform.position);
         //ray = new Ray(folder.transform.position, CameraMgr.inst.position - folder.transform.position);
-        LineRenderer l;
-        if ((l = entity.gameObject.transform.Find("LineObject").gameObject.GetComponent<LineRenderer>()) != null)
-        {
-            //if (Mathf.Abs(Utils.Atan(-CameraMgr.inst.position.x + folder.transform.position.x, -CameraMgr.inst.position.z + folder.transform.position.z)) <= FOV/2)
-            //{ l.material = Resources.Load("LineMaterials/Follow", typeof(Material)) as Material; }
-            //else
-            //{ l.material = Resources.Load("LineMaterials/Intercept", typeof(Material)) as Material; }
-            l.material = Resources.Load("LineMaterials/Intercept", typeof(Material)) as Material;
-            l.SetPosition(0, folder.transform.position);
-            l.SetPosition(1, folder.transform.position + (obj.transform.position - folder.transform.position));
-        }
         //float distance;
         //if (plane.Raycast(ray, out float distance))
-        if (Physics.Raycast(ray, out hitData, 50))
+        for (int tries = 0; tries < 2; tries++)
         {
-            if (hitData.transform.gameObject == obj) { return hitData.transform.gameObject; }
-            if (hitData.transform.gameObject.name == "Main Camera") { return hitData.transform.gameObject; }
-            if (hitData.transform.gameObject.GetComponent<Entity381>() != null) { return hitData.transform.gameObject; }
+            Vector3 direction = (obj.transform.position + (Vector3.down * (tries / 2))) - folder.transform.position;
+            ray = new Ray(folder.transform.position, direction);
+            LineRenderer l;
+            if ((l = entity.gameObject.transform.Find("LineObject").gameObject.GetComponent<LineRenderer>()) != null)
+            {
+                //if (Mathf.Abs(Utils.Atan(-CameraMgr.inst.position.x + folder.transform.position.x, -CameraMgr.inst.position.z + folder.transform.position.z)) <= FOV/2)
+                //{ l.material = Resources.Load("LineMaterials/Follow", typeof(Material)) as Material; }
+                //else
+                //{ l.material = Resources.Load("LineMaterials/Intercept", typeof(Material)) as Material; }
+                l.material = Resources.Load("LineMaterials/Follow", typeof(Material)) as Material;
+                l.SetPosition(0, ray.origin);
+                //l.SetPosition(1, ray.origin + direction);
+                l.SetPosition(1, ray.origin + (ray.direction * gossipRange));
+            }
+            if (Physics.Raycast(ray, out hitData, 200))
+            {
+                if (hitData.transform.gameObject.GetComponent<Entity381>() != null) { Debug.Log("Found Entity"); return hitData.transform.gameObject; }
+                if (hitData.transform.gameObject == obj) {  return hitData.transform.gameObject; }
+                if (hitData.transform.gameObject.name == "Main Camera") { Debug.Log("Found Camera"); return hitData.transform.gameObject; }
+                if (hitData.transform.parent != null)
+                {
+                    if (hitData.transform.parent.gameObject.GetComponent<Entity381>() != null) { Debug.Log("Found Entity Parent"); return hitData.transform.parent.gameObject; }
+                    if (hitData.transform.parent.gameObject == obj) { return hitData.transform.parent.gameObject; }
+                    if (hitData.transform.parent.gameObject.name == "Main Camera") { Debug.Log("Found Camera Parent"); return hitData.transform.parent.gameObject; }
+                }
+                //Debug.Log(hitData.transform.gameObject.name);
+            }
+            //Debug.Log("Failed Round: " + tries);
         }
         return null;
     }

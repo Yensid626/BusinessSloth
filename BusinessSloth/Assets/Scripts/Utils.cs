@@ -115,10 +115,16 @@ public static class Utils {
         return new Vector3(intercept, 0, (intercept * slopeA) + offsetA);
     }*/
 
-    public static void Sleep(float time)
+    /*public static void Sleep(float time)
     {
         float t = time;
         while (t > 0) { t -= Time.deltaTime; }
         return;
+    }*/
+
+    public static IEnumerator Sleep(float time)
+    {
+        //Wait for x seconds
+        yield return new WaitForSeconds(time);
     }
 }

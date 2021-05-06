@@ -124,6 +124,7 @@ public class Entity381 : MonoBehaviour
         line.name = "LineObject";
         line.GetComponent<LineRenderer>().startWidth = 0.05f;line.GetComponent<LineRenderer>().endWidth = 0.05f;
         line.SetActive(showLine);
+        //line.SetActive(false);
     }
 
     void addPatrol()
