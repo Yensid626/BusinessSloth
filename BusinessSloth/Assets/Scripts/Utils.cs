@@ -114,4 +114,11 @@ public static class Utils {
         float intercept = (offsetB - offsetA) / (slopeA - slopeB);
         return new Vector3(intercept, 0, (intercept * slopeA) + offsetA);
     }*/
+
+    public static void Sleep(float time)
+    {
+        float t = time;
+        while (t > 0) { t -= Time.deltaTime; }
+        return;
+    }
 }

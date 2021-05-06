@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class AIVision : MonoBehaviour
 {
-    public float FOV = 70;
-    public float farClipping = 12;
-    public float nearClipping = 0.2f;
-    public bool visible = false;
+    public bool collectSuspision = true;
+    public bool collectGossip = false;
+    public float gossipRange = 20;
+    internal float FOV = 70;
+    internal float farClipping = 12;
+    internal float nearClipping = 0.2f;
+    internal bool visible = false;
     internal List<LineRenderer> lines = new List<LineRenderer>();
     float cosAng;
     float sinAng;
     float tanAng;
     float renderedFOV;
-    public float timer;
-    public GameObject player;
+    internal float timer;
+    public GameObject objectsToFind;
+    public List<GameObject> players = new List<GameObject>();
     Transform p;
     Vector3 offset;
     GameObject folder;
@@ -28,17 +32,21 @@ public class AIVision : MonoBehaviour
         //transform.Find("originMarker").gameObject.SetActive(false);
         p = transform;
         folder = new GameObject("FOVLines");
-        folder.transform.localPosition = new Vector3(0, 1.93f, 0);
-        if (transform.Find("FOV") != null)
-        { folder.transform.localPosition = transform.Find("FOV").transform.position; }
-        folder.transform.localScale = new Vector3(1, 1, 1);
         folder.transform.parent = transform;
+        folder.transform.localPosition = new Vector3(0, 1.93f, 0);
+        Debug.Log(p.position);
+        Debug.Log(folder.transform.position);
+        Debug.Log(folder.transform.localPosition);
+        if (transform.Find("FOV") != null)
+        { folder.transform.position = transform.Find("FOV").transform.position; }
+        //folder.transform.localScale = new Vector3(1, 1, 1);
         for (int i = 0; i < 12; i++)
         {
             GameObject obj = new GameObject("FOVLine:" + i);
-            obj.transform.localPosition = new Vector3(0, 0, 0);
-            obj.transform.localScale = new Vector3(1, 1, 1);
             obj.transform.parent = folder.transform;
+            obj.transform.localPosition = new Vector3(0, 0, 0);
+            obj.transform.position = new Vector3(0, 0, 0);
+            obj.transform.localScale = new Vector3(1, 1, 1);
             LineRenderer line = obj.AddComponent<LineRenderer>();
             line.startWidth = 0.05f;
             line.endWidth = 0.05f;
@@ -46,6 +54,15 @@ public class AIVision : MonoBehaviour
             lines.Add(line);
         } //add 4 lines for farClip, 4 for near Clip, and 4 for edges
         renderedFOV = FOV + 1;
+
+        if (objectsToFind == null) { players.Clear(); players.TrimExcess(); players.Add(CameraMgr.inst.FPRig.gameObject); }
+        else
+        {
+            foreach (Transform child in objectsToFind.transform)
+            {
+                if (child.transform.gameObject != gameObject) { players.Add(child.transform.gameObject); }
+            }
+        }
         updateFOV();
     }
 
@@ -55,7 +72,7 @@ public class AIVision : MonoBehaviour
         if (timer <= 0)
         {
             detectPlayer();
-            timer = Random.Range(0.3f, 1.0f);
+            timer = Random.Range(0.4f, 1.6f);
         }
         timer -= dt;
     }
@@ -88,35 +105,65 @@ public class AIVision : MonoBehaviour
     RaycastHit hitData;
     void detectPlayer()
     {
-        player = castRayToPlayer();
-        GameObject selectedObject = SelectionMgr.inst.selectedEntity;
-        if (player != null)
+        for(int i = 0; i < players.Count; i++)
         {
-            if (selectedObject == null) { entity.suspision += 0.5f; return; }
-            //entity.suspision += selectedObject.GetComponent<Points>().points;
-            entity.suspision = Utils.Clamp(entity.suspision += selectedObject.GetComponent<Points>().points, -1, 10);
-            //Debug.Log("Ha Found you Slacking Off");
+            GameObject player = castRayToObject(players[i]);
+            if (player != null)
+            {
+                if (collectSuspision)
+                {
+                    GameObject selectedObject = SelectionMgr.inst.selectedEntity;
+                    if (selectedObject == null) { entity.suspision = Utils.Clamp(entity.suspision += 0.5f, -1, 10); return; }
+                    //entity.suspision += selectedObject.GetComponent<Points>().points;
+                    entity.suspision = Utils.Clamp(entity.suspision += selectedObject.GetComponent<Points>().points, -1, 10);
+                    //Debug.Log("Ha Found you Slacking Off");
+                }
+                if (collectGossip)
+                {
+                    if ((player.GetComponent<Entity381>() != null) && (Utils.getDist(entity.gameObject.transform.position, player.transform.position) <= gossipRange))
+                    {
+                        Debug.Log("Yummy Gossip!");
+                        entity.pause = true;
+                        player.GetComponent<Entity381>().pause = true;
+                        entity.suspision += player.GetComponent<Entity381>().suspision;
+                        player.GetComponent<Entity381>().suspision = 0;
+                        Utils.Sleep(1.5f);
+                        entity.pause = false;
+                        player.GetComponent<Entity381>().pause = false;
+                    }
+                    else
+                    {
+                        Debug.Log("Gossip Failed");
+                    }
+                }
+
+            }
         }
     }
 
-    internal GameObject castRayToPlayer()
+    internal GameObject castRayToObject(GameObject obj) // ####Folder Pos is this entitys eyesight!####
     {
         //Plane plane = new Plane(Vector3.up, 0);
-        ray = new Ray(folder.transform.position, CameraMgr.inst.position - folder.transform.position);
-        //ray = new Ray(folder.transform.position, CameraMgr.inst.position);
-        //LineRenderer l = entity.GetComponent<LineRenderer>();
-        //if (Mathf.Abs(Utils.Atan(-CameraMgr.inst.position.x + folder.transform.position.x, -CameraMgr.inst.position.z + folder.transform.position.z)) <= FOV/2)
-        //{ l.material = Resources.Load("LineMaterials/Follow", typeof(Material)) as Material; }
-        //else
-        //{ l.material = Resources.Load("LineMaterials/Intercept", typeof(Material)) as Material; }
-        //l.material = Resources.Load("LineMaterials/Intercept", typeof(Material)) as Material;
-        //l.SetPosition(0, folder.transform.position);
-        //l.SetPosition(1, folder.transform.position + (CameraMgr.inst.position - folder.transform.position));
+        ray = new Ray(folder.transform.position, obj.transform.position - folder.transform.position);
+        //ray = new Ray(folder.transform.position, CameraMgr.inst.position - folder.transform.position);
+        LineRenderer l;
+        if ((l = entity.gameObject.transform.Find("LineObject").gameObject.GetComponent<LineRenderer>()) != null)
+        {
+            //if (Mathf.Abs(Utils.Atan(-CameraMgr.inst.position.x + folder.transform.position.x, -CameraMgr.inst.position.z + folder.transform.position.z)) <= FOV/2)
+            //{ l.material = Resources.Load("LineMaterials/Follow", typeof(Material)) as Material; }
+            //else
+            //{ l.material = Resources.Load("LineMaterials/Intercept", typeof(Material)) as Material; }
+            l.material = Resources.Load("LineMaterials/Intercept", typeof(Material)) as Material;
+            l.SetPosition(0, folder.transform.position);
+            l.SetPosition(1, folder.transform.position + (obj.transform.position - folder.transform.position));
+        }
         //float distance;
         //if (plane.Raycast(ray, out float distance))
         if (Physics.Raycast(ray, out hitData, 50))
         {
+            if (hitData.transform.gameObject == obj) { return hitData.transform.gameObject; }
             if (hitData.transform.gameObject.name == "Main Camera") { return hitData.transform.gameObject; }
+            if (hitData.transform.gameObject.GetComponent<Entity381>() != null) { return hitData.transform.gameObject; }
         }
         return null;
     }

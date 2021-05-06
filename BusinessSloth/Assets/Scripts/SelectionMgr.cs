@@ -15,6 +15,7 @@ public class SelectionMgr : MonoBehaviour
     //public int selectedEntityIndex = 0;
     public float timer;
     public float multiplier;
+    internal Light light;
 
     public static SelectionMgr inst;
     private void Awake()
@@ -49,7 +50,7 @@ public class SelectionMgr : MonoBehaviour
             multiplier += dt;
             tempEntity = selectedEntity;
             if (tempEntity != (selectedEntity = GetMouseOver()))
-                { multiplier = 1; }
+                { multiplier = 1; Destroy(light); }
             if (selectedEntity != null)
                 { selectedEntity.GetComponent<Points>().AwardPoints(multiplier); }
         }

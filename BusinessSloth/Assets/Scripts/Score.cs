@@ -118,8 +118,8 @@ public class PointDisplay
         //timer = 0;
         ready = true;
 
-        Debug.Log("Points Ready1! " + rectTransform.position);
-        Debug.Log("Points Ready2! " + rectTransform.localPosition);
+        //Debug.Log("Points Ready1! " + rectTransform.position);
+        //Debug.Log("Points Ready2! " + rectTransform.localPosition);
     }
 
     public PointDisplay(GameObject parent, string displayText, Color textColor)
@@ -172,9 +172,6 @@ public class PointDisplay
     {
         done = true;
         ready = false;
-        Debug.Log(rectTransform.position);
-        Debug.Log(rectTransform.localPosition);
-        Debug.Log(rectTransform.anchoredPosition3D);
         return display;
     }
 

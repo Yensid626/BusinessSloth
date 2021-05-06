@@ -6,6 +6,7 @@ public class Entity381 : MonoBehaviour
 {
     internal float deltaDesiredSpeed = 5; //How much the desired speed is changed each key press
     internal float deltaDesiredHeading = 2.5f; //How much the desired heading is changed each key press
+    public bool pause = false;
     public float suspision;
     public float acceleration = 4;
     public float turnSpeed = 55;
@@ -44,6 +45,7 @@ public class Entity381 : MonoBehaviour
             AIVision = transform.gameObject.AddComponent<AIVision>();
         }
         suspision = 0;
+        //pause = false;
     }
     void Start()
     {
@@ -64,9 +66,10 @@ public class Entity381 : MonoBehaviour
             //line.SetActive(isSelected);
         }
         //decorations.SetActive(isSelected);
-        OrientedPhysics381.Tick(dt);
         unitAI.Tick(dt);
         AIVision.Tick(dt);
+        if (pause) { desiredSpeed = 0; }
+        OrientedPhysics381.Tick(dt);
         //transform.localPosition += transform.TransformDirection(Vector3.forward * dt * 1.2f);
     }
 
@@ -119,7 +122,8 @@ public class Entity381 : MonoBehaviour
         line.AddComponent<LineRenderer>();
         line.transform.parent = transform;
         line.name = "LineObject";
-        line.SetActive(false);
+        line.GetComponent<LineRenderer>().startWidth = 0.05f;line.GetComponent<LineRenderer>().endWidth = 0.05f;
+        line.SetActive(showLine);
     }
 
     void addPatrol()
