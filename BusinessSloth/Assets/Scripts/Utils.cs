@@ -60,6 +60,9 @@ public static class Utils {
     public static float Atan(float x, float y)
     { return Utils.Degrees360(Mathf.Rad2Deg * Mathf.Atan2(x, y)); }
 
+    public static Vector3 DirectionTo(Vector3 from, Vector3 to)
+    { return (new Vector3(to.x - from.x, 0, to.z - from.z)).normalized; }
+
     public static float Round(float value, int digits)
     {
         float mult = Mathf.Pow(10.0f, (float)digits);
@@ -100,31 +103,13 @@ public static class Utils {
         return (Mathf.Pow((value - currentMin) / (currentMax - currentMin), curve) * (newMax-newMin)) + newMin;
     }
 
-    public static Vector3 getPositionFromAngle(float heading, float speed)
+    public static Vector3 getPositionFromAngle(float heading, float speed) //returns a direction vector scaled by speed
     {
         return new Vector3(Utils.Sin(heading) * speed, 0, Utils.Cos(heading) * speed);
     }
 
-    /*public static Vector3 get2DIntercept(Vector3 point2a, Vector3 point1a, Vector3 point2b, Vector3 point1b)
+    public static float Facing(GameObject self, GameObject target)
     {
-        float slopeA = (point1a.z - point2a.z)/ (point1a.x - point2a.x);
-        float slopeB = (point1b.z - point2b.z) / (point1b.x - point2b.x);
-        float offsetA = point1a.z - (point1a.x * slopeA);
-        float offsetB = point1b.z - (point1b.x * slopeB);
-        float intercept = (offsetB - offsetA) / (slopeA - slopeB);
-        return new Vector3(intercept, 0, (intercept * slopeA) + offsetA);
-    }*/
-
-    /*public static void Sleep(float time)
-    {
-        float t = time;
-        while (t > 0) { t -= Time.deltaTime; }
-        return;
-    }*/
-
-    public static IEnumerator Sleep(float time)
-    {
-        //Wait for x seconds
-        yield return new WaitForSeconds(time);
+        return Vector3.Dot(self.transform.forward, (target.transform.position - self.transform.position).normalized);
     }
 }

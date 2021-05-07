@@ -10,7 +10,6 @@ public class Score : MonoBehaviour
     public GameOverScreen GameOver;
     public List<PointDisplay> pointDisplays = new List<PointDisplay>();
     public int count;
-    //public float pointsPerSecond;
 
     public static Score inst;
     private void Awake()
@@ -21,51 +20,38 @@ public class Score : MonoBehaviour
     void Start()
     {
         scoreAmount = 0f;
-        //pointsPerSecond = 1f;
     }
 
     // Update is called once per frame
-    void Update()
+    public void Tick(float dt)
     {
+        ScoreGameOver.inst.Tick(dt);
         scoreText.text = "Points: " + (int)scoreAmount;
-        //Debug.Log(pointDisplays.Count);
-        int i = 0;
-        for (i = 0; i <= pointDisplays.Count - 1; i++)
+        DisplayAwardedPoints(dt);
+    }
+
+    public void AddPoints(float amount)
+        {scoreAmount += amount; pointDisplays.Add(new PointDisplay(scoreText.gameObject.transform.parent.gameObject, "+" + amount.ToString(), new Color(0, 255, 0)));}
+
+    public void RemovePoints(float amount)
+        {scoreAmount += amount; pointDisplays.Add(new PointDisplay(scoreText.gameObject.transform.parent.gameObject, amount.ToString(), new Color(255, 0, 0)));}
+
+    public float GetPoints() {return scoreAmount;}
+    
+    void DisplayAwardedPoints(float dt)
+    {
+        //int i = 0;
+        for (int i = 0; i <= pointDisplays.Count - 1; i++)
         {
-            //Debug.Log(pointDisplays[i].rectTransform.position);
             if (!pointDisplays[i].IsDone())
-            {
-                pointDisplays[i].Tick(Time.deltaTime);
-            }
+                {pointDisplays[i].Tick(dt);}
             else
             {
                 Destroy(pointDisplays[i].Stop());
                 pointDisplays.RemoveAt(i--);
             }
         }
-        //scoreAmount += pointsPerSecond * Time.deltaTime;
-
     }
-
-    public void AddPoints(float amount)
-    {
-        scoreAmount += amount;
-        pointDisplays.Add(new PointDisplay(scoreText.gameObject.transform.parent.gameObject, "+" + amount.ToString(), new Color(0, 255, 0)));
-        //scoreAmount += (amount > 0 ? amount : 0); //if amount is greater than 0, add that amount, otherwise add 0 points
-    }
-
-    public void RemovePoints(float amount)
-    {
-        scoreAmount += amount;
-        pointDisplays.Add(new PointDisplay(scoreText.gameObject.transform.parent.gameObject, amount.ToString(), new Color(255, 0, 0)));
-        //scoreAmount -= (amount > 0 ? amount : 0); //if amount is greater than 0, subtract that amount, otherwise subtract 0 points
-    }
-
-    public float GetPoints()
-    {
-        return scoreAmount;
-    }
-    
 }
 
 public class PointDisplay
@@ -115,11 +101,7 @@ public class PointDisplay
         text.text = message;
         text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 
-        //timer = 0;
         ready = true;
-
-        //Debug.Log("Points Ready1! " + rectTransform.position);
-        //Debug.Log("Points Ready2! " + rectTransform.localPosition);
     }
 
     public PointDisplay(GameObject parent, string displayText, Color textColor)
@@ -131,7 +113,6 @@ public class PointDisplay
         speed = Random.Range(160, 200);
         spread = Random.Range(100, 140);
         spreadLR = Random.Range(0.0f, 1.0f) >= 0.5 ? true : false;
-        //Debug.Log(Random.Range(0.0f, 1.0f));
         color = textColor;
         Init();
     }
@@ -144,6 +125,7 @@ public class PointDisplay
         fade = Random.Range(fadeTime.x, fadeTime.y);
         speed = Random.Range(moveSpeed.x, moveSpeed.y);
         spread = Random.Range(randomSpread.x,randomSpread.y);
+        spreadLR = spreadDirection;
         color = textColor;
         Init();
     }
@@ -159,9 +141,7 @@ public class PointDisplay
         timer = timer > 0 ? timer - dt : 0;
         rectTransform.position += new Vector3(Random.Range(minSpread,maxSpread)/(0.4f+(timer*3.5f)), speed, 0) * dt * text.color.a;
         if (timer <= 0)
-        {
-            text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a - (fade*dt));
-        }
+            {text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a - (fade*dt));}
         if (text.color.a <= 0) { ready = false; done = true; }
     }
 

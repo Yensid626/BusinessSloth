@@ -14,9 +14,9 @@ public class SwitchMusicTrigger : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {  
-    }
+    }*/
 
     void OnTrigger()
     {

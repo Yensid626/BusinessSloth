@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    public CameraMgr CameraMgr;
-    public EntityMgr EntityMgr;
-    public SelectionMgr SelectionMgr;
+    //public CameraMgr CameraMgr;
+    //public EntityMgr EntityMgr;
+    //public SelectionMgr SelectionMgr;
 
     // Update is called once per frame
     void Update()
@@ -16,6 +16,9 @@ public class Main : MonoBehaviour
 
     internal void Tick(float dt)
     {
-        EntityMgr.Tick(dt);
+        EntityMgr.inst.Tick(dt);
+        //EntityMgr.Tick(dt);
+        CameraMgr.inst.Tick(dt);
+        Score.inst.Tick(dt);
     }
 }

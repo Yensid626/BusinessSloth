@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class ScoreGameOver : MonoBehaviour
 {
+    public static ScoreGameOver inst;
+
+    private void Awake()
+    {
+        inst = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -12,7 +18,7 @@ public class ScoreGameOver : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void Tick(float dt)
     {
         if(Score.inst != null && Score.inst.GetPoints() <= -20)
         {

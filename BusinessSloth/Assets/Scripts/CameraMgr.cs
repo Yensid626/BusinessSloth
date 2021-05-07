@@ -36,6 +36,7 @@ public class CameraMgr : MonoBehaviour
 
     internal void Tick(float dt)
     {
+        RotateChair.inst.Tick(dt);
         ProcessInput();
         Physics(dt);
     }

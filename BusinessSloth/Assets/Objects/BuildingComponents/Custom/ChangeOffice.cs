@@ -31,12 +31,6 @@ public class ChangeOffice : MonoBehaviour
         //else { gameObject.SetActive(false); }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void GetChildren()
     {
         decorations.Clear();

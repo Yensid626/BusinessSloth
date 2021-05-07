@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class RotateChair : MonoBehaviour
 {
-    public GameObject cameraMgr;
+    //public GameObject cameraMgr;
     public float rotateSpeed = 5.0f;
     GameObject cam;
+    public static RotateChair inst;
+
+    private void Awake()
+    {
+        inst = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        cam = cameraMgr.GetComponent<CameraMgr>().FPRig.gameObject;
+        cam = CameraMgr.inst.FPRig.gameObject;
     }
 
     // Update is called once per frame
-    void Update()
+    public void Tick(float dt)
     {
         transform.position = new Vector3(cam.transform.position.x, transform.position.y, cam.transform.position.z);
         float dH = Utils.differenceDegrees(transform.rotation.eulerAngles.y, cam.transform.rotation.eulerAngles.y);

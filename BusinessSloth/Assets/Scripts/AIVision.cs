@@ -20,6 +20,8 @@ public class AIVision : MonoBehaviour
     internal float timer;
     public GameObject objectsToFind;
     public List<GameObject> players = new List<GameObject>();
+    internal List<Entity381> gossipingEntities = new List<Entity381>();
+    internal float recentGossip = 0;
     Transform p;
     Vector3 offset;
     GameObject folder;
@@ -77,6 +79,7 @@ public class AIVision : MonoBehaviour
             timer = Random.Range(checkTime.x,checkTime.y);
         }
         timer -= dt;
+        recentGossip -= dt;
     }
 
     void updateFOV()
@@ -116,50 +119,60 @@ public class AIVision : MonoBehaviour
                 if (collectSuspision)
                 {
                     GameObject selectedObject = SelectionMgr.inst.selectedEntity;
-                    if (selectedObject == null) { entity.suspision = Utils.Clamp(entity.suspision += 0.5f, -1, 10); return; }
+                    if (selectedObject == null) { entity.suspicion = Utils.Clamp(entity.suspicion += 0.5f, -1, 10); return; }
                     //entity.suspision += selectedObject.GetComponent<Points>().points;
-                    entity.suspision = Utils.Clamp(entity.suspision += selectedObject.GetComponent<Points>().points, -1, 10);
+                    entity.suspicion = Utils.Clamp(entity.suspicion += selectedObject.GetComponent<Points>().points, -1, 10);
                     //Debug.Log("Ha Found you Slacking Off");
                 }
                 if (collectGossip)
                 {
                     if ((player.GetComponent<Entity381>() != null) && (Utils.getDist(entity.gameObject.transform.position, player.transform.position) <= gossipRange))
                     {
-                        //Debug.Log("Yummy Gossip Time!");
-                        PauseForGossip(entity, player.GetComponent<Entity381>());
-                        //entity.pause = true;
-                        //player.GetComponent<Entity381>().pause = true;
-                        entity.suspision += player.GetComponent<Entity381>().suspision;
-                        player.GetComponent<Entity381>().suspision = 0;
-                        StartCoroutine(Utils.Sleep(3.5f));
-                        //Utils.Sleep(3.5f);
-                        //Invoke("FinishGossip", 5);
-                        //entity.pause = false;
-                        //player.GetComponent<Entity381>().pause = false;
-                        FinishGossip(entity, player.GetComponent<Entity381>());
-                        //Debug.Log("Finished Gossiping");
-                    }
-                    else
-                    {
-                        Debug.Log("Gossip Failed");
+                        if (!gossipingEntities.Contains(player.GetComponent<Entity381>()) && recentGossip <=0 && Utils.Facing(entity.gameObject,player) >= -0.1)
+                        {
+                            CancelInvoke();
+                            //Debug.Log("Yummy Gossip Time!");
+                            float gossipTime = 0;
+                            player.GetComponent<UnitAI>().AddImmediateCommand(new Command(player, CommandType.FaceTowards, (Vector3.right / 15) + Vector3.down, entity.gameObject));
+                            entity.gameObject.GetComponent<UnitAI>().AddImmediateCommand(new Command(entity.gameObject, CommandType.Meet, player));
+                            entity.gameObject.GetComponent<UnitAI>().AddImmediateCommand(new Command(entity.gameObject, CommandType.FaceTowards, (Vector3.right/15) + Vector3.down, player));
+                            AddEntityToGossip(entity);
+                            AddEntityToGossip(player.GetComponent<Entity381>());
+                            //player.GetComponent<Entity381>().desiredHeading = entity.desiredHeading - 180;
+                            //PauseForGossip(entity, player.GetComponent<Entity381>());
+                            entity.suspicion += player.GetComponent<Entity381>().suspicion;
+                            gossipTime = Mathf.Abs(player.GetComponent<Entity381>().suspicion) * 2;
+                            player.GetComponent<Entity381>().suspicion = 0;
+                            //StartCoroutine(Utils.Sleep(3.5f));
+                            //Utils.Sleep(3.5f);
+                            Invoke("FinishGossip", gossipTime);
+                            //FinishGossip()
+                            //Debug.Log("Finished Gossiping");
+                        }
                     }
                 }
             }
             index = (++index < players.Count ? index : 0);
-            break;
+            //break;
         }
     }
 
-    public void PauseForGossip(Entity381 ent1, Entity381 ent2)
+    public void AddEntityToGossip(Entity381 ent)
     {
-        Debug.Log("Yummy Gossip Time!");
-        ent1.pause = true;
-        ent2.pause = true;
+        ent.pause = true;
+        gossipingEntities.Add(ent);
+        Debug.Log("Joined in some gossip");
     }
-    public void FinishGossip(Entity381 ent1, Entity381 ent2)
+    public void FinishGossip()
     {
-        ent1.pause = false;
-        ent2.pause = false;
+        for(int i = gossipingEntities.Count-1; i >=0; i--)
+        {
+            gossipingEntities[i].gameObject.GetComponent<UnitAI>().RemoveImmediateCommands();
+            gossipingEntities[i].pause = false;
+            gossipingEntities.RemoveAt(i);
+        }
+        gossipingEntities.Clear(); gossipingEntities.TrimExcess();
+        recentGossip = 5f;
         Debug.Log("Finished Gossiping");
     }
 
@@ -187,14 +200,14 @@ public class AIVision : MonoBehaviour
             }
             if (Physics.Raycast(ray, out hitData, 200))
             {
-                if (hitData.transform.gameObject.GetComponent<Entity381>() != null) { Debug.Log("Found Entity"); return hitData.transform.gameObject; }
+                if (hitData.transform.gameObject.GetComponent<Entity381>() != null) { return hitData.transform.gameObject; }
                 if (hitData.transform.gameObject == obj) {  return hitData.transform.gameObject; }
-                if (hitData.transform.gameObject.name == "Main Camera") { Debug.Log("Found Camera"); return hitData.transform.gameObject; }
+                if (hitData.transform.gameObject.name == "Main Camera") { return hitData.transform.gameObject; }
                 if (hitData.transform.parent != null)
                 {
-                    if (hitData.transform.parent.gameObject.GetComponent<Entity381>() != null) { Debug.Log("Found Entity Parent"); return hitData.transform.parent.gameObject; }
+                    if (hitData.transform.parent.gameObject.GetComponent<Entity381>() != null) {return hitData.transform.parent.gameObject; }
                     if (hitData.transform.parent.gameObject == obj) { return hitData.transform.parent.gameObject; }
-                    if (hitData.transform.parent.gameObject.name == "Main Camera") { Debug.Log("Found Camera Parent"); return hitData.transform.parent.gameObject; }
+                    if (hitData.transform.parent.gameObject.name == "Main Camera") {return hitData.transform.parent.gameObject; }
                 }
                 //Debug.Log(hitData.transform.gameObject.name);
             }

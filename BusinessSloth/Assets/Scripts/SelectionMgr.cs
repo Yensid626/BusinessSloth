@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SelectionMgr : MonoBehaviour
 {
-    public GameObject entityMgr;
-    public GameObject cameraMgr;
+    //public GameObject entityMgr;
+    //public GameObject cameraMgr;
     public GameObject selectedEntity;
     private GameObject tempEntity;
     //internal Vector3 movePosition;
@@ -15,7 +15,6 @@ public class SelectionMgr : MonoBehaviour
     //public int selectedEntityIndex = 0;
     public float timer;
     public float multiplier;
-    internal Light light;
 
     public static SelectionMgr inst;
     private void Awake()
@@ -50,65 +49,13 @@ public class SelectionMgr : MonoBehaviour
             multiplier += dt;
             tempEntity = selectedEntity;
             if (tempEntity != (selectedEntity = GetMouseOver()))
-                { multiplier = 1; Destroy(light); }
+                { multiplier = 1; }
             if (selectedEntity != null)
                 { selectedEntity.GetComponent<Points>().AwardPoints(multiplier); }
         }
         if (Input.GetMouseButtonUp(0)) { timer += 1;}
         timer += dt;
     }
-    /*void ProcessInput()
-    {
-
-        if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            if (Input.GetKey(KeyCode.LeftShift)) { SelectNextEntity(true); }
-            else { SelectNextEntity(); }
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            tempEntity = GetMouseEntity();
-            if (tempEntity != null)
-            {
-                selectedEntity = tempEntity.GetComponent<Entity381>();
-                selectedEntityIndex = entities.IndexOf(selectedEntity);
-                SelectEntity();
-            }
-        }
-    }
-
-    void SelectNextEntity()
-    { SelectNextEntity(false); }
-    void SelectNextEntity(bool keepPrevious)
-    {
-        selectedEntityIndex = (selectedEntityIndex >= entities.Count - 1 ? 0 : selectedEntityIndex + 1);
-        SelectEntity(keepPrevious);
-    }
-
-    void SelectEntity()
-    { SelectEntity(false); }
-    void SelectEntity(bool keepPrevious)
-    {
-        if (!keepPrevious) { UnselectAll(); }
-        if (selectedEntityIndex >= 0 && selectedEntityIndex < entities.Count)
-        {
-            selectedEntity = entities[selectedEntityIndex];
-            selectedEntity.gameObject.GetComponent<Entity381>().isSelected = true;
-            cameraMgr.GetComponent<CameraMgr>().FPChar = selectedEntity.gameObject;
-        }
-    }
-
-    void UnselectAll()
-    {
-        foreach (Entity381 phx in entities)
-        {
-            phx.isSelected = false;
-        }
-    }
-
-    public int IndexEntity(Entity381 ent)
-    { return entities.IndexOf(selectedEntity); } */
 
     public GameObject GetMouseEntity()
     {
@@ -118,7 +65,7 @@ public class SelectionMgr : MonoBehaviour
         {
             float shortestDist = 5.5f;
             float dist;
-            foreach (Entity381 ent in entityMgr.GetComponent<EntityMgr>().entitiesPeople)
+            foreach (Entity381 ent in EntityMgr.inst.entitiesPeople)
             {
                 dist = Utils.getDist(mousePosition, ent.transform.position);
                 //dist = Vector3.Distance(mousePosition, ent.transform.position);
@@ -182,7 +129,7 @@ public class SelectionMgr : MonoBehaviour
         if (Physics.Raycast(ray, out hitData, 1000))
         {
             //Debug.Log(hitData.transform.gameObject.name);
-            foreach (GameObject ent in entityMgr.GetComponent<EntityMgr>().entitiesObjects)
+            foreach (GameObject ent in EntityMgr.inst.entitiesObjects)
             {
                 if (ent == hitData.transform.gameObject) { return hitData.transform.gameObject; }
             }

@@ -6,11 +6,16 @@ public class EntityMgr : MonoBehaviour
 {
     public GameObject people;
     public GameObject cubicle;
-    public GameObject cameraMgr;
-    public GameObject selectionMgr;
+    //public GameObject cameraMgr;
+    //public GameObject selectionMgr;
     public List<Entity381> entitiesPeople = new List<Entity381>();
     public List<GameObject> entitiesObjects = new List<GameObject>();
+    public static EntityMgr inst;
 
+    private void Awake()
+    {
+        inst = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -27,8 +32,8 @@ public class EntityMgr : MonoBehaviour
     {
         ProcessInput();
         TickEntities(dt);
-        TickCamera(dt);
-        selectionMgr.GetComponent<SelectionMgr>().Tick(dt);
+        SelectionMgr.inst.Tick(dt);
+        //etselectionMgr.GetComponent<SelectionMgr>().Tick(dt);
     }
 
     void ProcessInput()
@@ -85,10 +90,5 @@ public class EntityMgr : MonoBehaviour
             entitiesObjects.Add(child.gameObject);
             if (child.gameObject.GetComponent<BoxCollider>() == null) { child.gameObject.AddComponent<BoxCollider>(); }
         }
-    }
-
-    void TickCamera(float dt)
-    {
-        cameraMgr.GetComponent<CameraMgr>().Tick(dt);
     }
 }

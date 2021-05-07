@@ -2,28 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CommandType { Move, Follow, Intercept, Wait};
+public enum CommandType { Move, Follow, Intercept, Wait, Meet, FaceTowards};
 
 public class UnitAI : MonoBehaviour
 {
     public List<Command> commands = new List<Command>();
+    public List<Command> immediateCommands = new List<Command>();
     public bool followingCommand = false;
     public GameObject line;
     public bool patrol = false;
+    public bool showLine = false;
     public int count;
-    // Start is called before the first frame update
+
     private void Awake()
     {
         addLine();
         //line.AddComponent<LineRenderer>();
         commands.Clear();
         commands.TrimExcess();
-        Debug.Log("UnitAI Started. All commands Cleared");
+        immediateCommands.Clear();
+        immediateCommands.TrimExcess();
+        //sDebug.Log("UnitAI Started. All commands Cleared");
     }
 
-        void Start()
-    {
-    }
+    // Start is called before the first frame update
+    void Start() {}
 
     // Update is called once per frame
     /*void Update()
@@ -34,9 +37,36 @@ public class UnitAI : MonoBehaviour
 
     internal void Tick(float dt)
     {
-        count = commands.Count;
+        count = immediateCommands.Count;
+        if (immediateCommands.Count >=1)
+        {
+            followingCommand = true;
+            if (!immediateCommands[0].isDone())
+            {
+                //line.positionCount = (commands.Count * 2) + 1;
+                immediateCommands[0].enabled = true;
+            }
+            else
+            {
+                //Debug.Log("Command Finished");
+                immediateCommands[0].Stop();
+                //if (patrol) { AddImmediateCommand(new Command(commands[0].me, commands[0].command, commands[0].targetPos, commands[0].targetEntity)); }
+                immediateCommands.RemoveAt(0);
+            }
+            int i = 0;
+            for (i = 0; i <= immediateCommands.Count - 1; i++)
+            {
+                if (i < 1)
+                { immediateCommands[i].startPos = immediateCommands[i].me.transform.position; }
+                else
+                { immediateCommands[i].startPos = immediateCommands[i - 1].endPos; }
+                immediateCommands[i].Tick(dt);
+            }
+            return;
+        }
         if (commands.Count >= 1)
         {
+            count = commands.Count;
             followingCommand = true;
             if (!commands[0].isDone())
             {
@@ -59,13 +89,13 @@ public class UnitAI : MonoBehaviour
                     { commands[i].startPos = commands[i - 1].endPos; }
                 commands[i].Tick(dt);
             }
+            return;
         }
-        else { followingCommand = false; }
+        followingCommand = false;
     }
 
     internal void SetCommand(Command c)
     {
-        //for (var l = 0; l < commands.Count; l++)
         while (commands.Count >= 1)
         {
             commands[0].Stop();
@@ -80,12 +110,15 @@ public class UnitAI : MonoBehaviour
     internal void AddCommand(Command c)
     {
         commands.Insert(commands.Count,c);
-        //Debug.Log("Command #" + commands.Count);
-        //commands.Add(c);
         line.GetComponent<LineRenderer>().positionCount = (commands.Count*2) + 1;
-        //Debug.Log("Command added!");
         //Add command to list
-        //only add if player is holding left shift and right clicks
+    }
+
+    internal void AddImmediateCommand(Command c)
+    {
+        immediateCommands.Insert(immediateCommands.Count, c);
+        line.GetComponent<LineRenderer>().positionCount = (immediateCommands.Count * 2) + 1;
+        //Add command to list
     }
 
     void addLine()
@@ -93,8 +126,24 @@ public class UnitAI : MonoBehaviour
         if (line == null) { line = new GameObject(); }
         line.AddComponent<LineRenderer>();
         line.transform.parent = transform;
-        line.name = "LineObject-AI2";
-        line.SetActive(false);
+        line.name = "LineObject-UnitAI";
+        line.SetActive(showLine);
+    }
+
+    public bool AnyImmediate()
+        {return immediateCommands.Count >= 1 ? true : false;}
+
+    public void RemoveCommands()
+    {
+        while (commands.Count >= 1)
+        { commands[0].Stop(); commands.RemoveAt(0); commands.TrimExcess(); }
+        return;
+    }
+    public void RemoveImmediateCommands()
+    {
+        while (immediateCommands.Count >= 1)
+            {immediateCommands[0].Stop();immediateCommands.RemoveAt(0); immediateCommands.TrimExcess();}
+        return;
     }
 }
 
@@ -132,6 +181,7 @@ public class Command
         this.targetEntity = obj;
         this.targetPos = obj.transform.position;
         this.endPos = targetPos;
+        this.mousePos = endPos;
         Init();
     }
     public Command(GameObject entity381, CommandType c, Vector3 pos, GameObject obj)
@@ -156,11 +206,7 @@ public class Command
         waiting = false;
         finished = false;
         enabled = false;
-        //line = new GameObject();
-        //line = me.transform.GetComponent<UnitAI>().line.transform.GetComponent<LineRenderer>();
-        //line.transform.parent = me.transform.parent.transform;
-        //line.AddComponent<LineRenderer>();
-        //line.positionCount = 3;
+        //getLine();
         startPos = me.transform.position;
         drawLine(me.transform.position, targetPos, "NA", 0);
         drawLine(targetPos, targetPos, "NA", 1);
@@ -196,16 +242,35 @@ public class Command
                     break;
                 case CommandType.Follow:
                     endPos = targetEntity.transform.position;
-                    targetPos = targetEntity.transform.TransformPoint(Vector3.right * 10);
+                    targetPos = targetEntity.transform.TransformPoint(Vector3.back * 3);
                     drawLine(startPos, targetPos, "Follow", 0);
                     drawLine(targetPos, endPos, "Follow", 1);
+                    break;
+                case CommandType.Meet:
+                    endPos = targetEntity.transform.position + Utils.DirectionTo(targetEntity.transform.position, startPos)*1.8f;
+                    targetPos = endPos;
+                    drawLine(startPos, targetPos, "Follow", 0);
+                    drawLine(targetPos, endPos, "Follow", 1);
+                    break;
+                case CommandType.FaceTowards:
+                    Vector3 direction = Utils.DirectionTo(targetEntity.transform.position, startPos) * -1;
+                    me.gameObject.GetComponent<Entity381>().desiredHeading = Utils.Atan(direction.x, direction.z);
+                    me.gameObject.GetComponent<Entity381>().desiredSpeed = 0;
+                    drawLine(startPos, targetPos, "Follow", 0);
+                    drawLine(targetPos, endPos, "Follow", 1);
+                    mousePos.x -= dt; waiting = true;
+                    //if (mousePos.x <= 0)
+                    //{
+                    //    Stop();
+                    //    return;
+                    //}
                     break;
                 case CommandType.Intercept:
                     endPos = targetEntity.transform.position;
                     Vector3 travel = Utils.getPositionFromAngle(targetEntity.GetComponent<Entity381>().heading, targetEntity.GetComponent<Entity381>().speed);
                     float time = Utils.getDist(startPos, targetPos) / me.GetComponent<Entity381>().speed;
                     time = Utils.Clamp(time, 0, 100);
-                    targetPos = targetEntity.transform.position + (travel * time);
+                    targetPos = endPos + (travel * time);
                     //Vector3 travel2 = Utils.getPositionFromAngle(me.GetComponent<Entity381>().heading, me.GetComponent<Entity381>().speed);
                     //targetPos = Utils.get2DIntercept(targetEntity.transform.position, targetEntity.transform.position + travel, me.transform.position, me.transform.position + travel2);
                     //targetPos = targetEntity.transform.TransformPoint(Vector3.forward * 2);
@@ -220,7 +285,7 @@ public class Command
 
     public bool isDone()
     {
-        if (Utils.getDist(startPos, targetPos) <= 0.3 || finished)
+        if ((!waiting && (Utils.getDist(startPos, targetPos) <= 0.3)) || finished)
         {
             Stop();
             return true;
@@ -251,14 +316,20 @@ public class Command
         ent.desiredSpeed = ent.maxSpeed * speedMultiplier;
     }
 
+    //void getLine()
+    //{
+    //    line = new GameObject();
+    //    line = me.transform.GetComponent<UnitAI>().line.transform.GetComponent<LineRenderer>();
+    //    line.transform.parent = me.transform.parent.transform;
+    //    line.AddComponent<LineRenderer>();
+    //    line.positionCount = 3;
+    //}
     void drawLine(Vector3 start, Vector3 end, string material, int index)
     {
-        /*
-        line.SetPosition(index, start);
-        line.SetPosition(index+1, end);
-        line.startWidth = 0.25f;
-        line.endWidth = 0.25f;
-        line.material = Resources.Load("LineMaterials/"+material, typeof(Material)) as Material;
-        */
+        //line.SetPosition(index, start);
+        //line.SetPosition(index+1, end);
+        //line.startWidth = 0.25f;
+        //line.endWidth = 0.25f;
+        //line.material = Resources.Load("LineMaterials/"+material, typeof(Material)) as Material;
     }
 }
