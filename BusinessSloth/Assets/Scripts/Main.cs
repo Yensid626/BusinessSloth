@@ -9,16 +9,30 @@ public class Main : MonoBehaviour
     //public SelectionMgr SelectionMgr;
 
     // Update is called once per frame
+
+    private bool awoken = false;
+    private bool started = false;
+    private void Awake()
+    {
+        awoken = true;
+    }
+    private void Start()
+    {
+        //Destroy(UIMgr.inst);
+        started = true;
+    }
+
     void Update()
     {
-        Tick(Time.deltaTime);
+        if (awoken && started) { Tick(Time.deltaTime); }
     }
 
     internal void Tick(float dt)
     {
         EntityMgr.inst.Tick(dt);
-        //EntityMgr.Tick(dt);
         CameraMgr.inst.Tick(dt);
-        Score.inst.Tick(dt);
+        UIMgr.inst.Tick(dt);
+
+        ScoreGameOver.inst.Tick(dt);
     }
 }

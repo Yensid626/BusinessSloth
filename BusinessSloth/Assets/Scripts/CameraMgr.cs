@@ -28,6 +28,7 @@ public class CameraMgr : MonoBehaviour
     {
         position = FPRig.transform.position;
         facing = FPRig.transform.rotation.eulerAngles;
+        AlertSystem.inst.CreateSoundEvent(EventType.FullScreen, 1, Color.red, 5);
     }
 
     // Update is called once per frame

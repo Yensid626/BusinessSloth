@@ -23,7 +23,7 @@ public class Score : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Tick(float dt)
+    internal void Tick(float dt)
     {
         ScoreGameOver.inst.Tick(dt);
         scoreText.text = "Points: " + (int)scoreAmount;
