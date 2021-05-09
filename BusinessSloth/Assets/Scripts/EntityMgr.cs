@@ -89,6 +89,15 @@ public class EntityMgr : MonoBehaviour
             //print("   Found Component [Ship]");
             entitiesObjects.Add(child.gameObject);
             if (child.gameObject.GetComponent<BoxCollider>() == null) { child.gameObject.AddComponent<BoxCollider>(); }
+            foreach (Transform child2 in child.gameObject.transform)
+            {
+                //print("   Found Component [Ship]");
+                if ((child2.gameObject.GetComponent<ChangeOffice>() != null) || (child2.gameObject.GetComponent<Points>() != null))
+                {
+                    entitiesObjects.Add(child2.gameObject);
+                    if (child2.gameObject.GetComponent<BoxCollider>() == null) { child2.gameObject.AddComponent<BoxCollider>(); }
+                }
+            }
         }
     }
 }

@@ -116,7 +116,7 @@ public class AIVision : MonoBehaviour
             GameObject player = castRayToObject(players[i]);
             if (player != null)
             {
-                if (collectSuspision)
+                if ((collectSuspision) && (Utils.Facing(entity.gameObject, player) >= -0.15))
                 {
                     GameObject selectedObject = SelectionMgr.inst.selectedEntity;
                     if (selectedObject == null) { entity.suspicion = Utils.Clamp(entity.suspicion += 0.5f, -1, 10); return; }

@@ -21,6 +21,7 @@ public class Entity381 : MonoBehaviour
     public OrientedPhysics OrientedPhysics381;
     public UnitAI unitAI;
     public AIVision AIVision;
+    public AISoundController soundController;
 
     public GameObject decorations;
 
@@ -30,19 +31,24 @@ public class Entity381 : MonoBehaviour
     private void Awake()
     {
         OrientedPhysics381 = transform.GetComponent<OrientedPhysics>();
-        if (!(OrientedPhysics381 != null))
+        if (OrientedPhysics381 == null)
         {
             OrientedPhysics381 = transform.gameObject.AddComponent<OrientedPhysics>();
         }
         unitAI = transform.GetComponent<UnitAI>();
-        if (!(unitAI != null))
+        if (unitAI == null)
         {
             unitAI = transform.gameObject.AddComponent<UnitAI>();
         }
         AIVision = transform.GetComponent<AIVision>();
-        if (!(AIVision != null))
+        if (AIVision == null)
         {
             AIVision = transform.gameObject.AddComponent<AIVision>();
+        }
+        soundController = transform.GetComponent<AISoundController>();
+        if (soundController == null)
+        {
+            soundController = transform.gameObject.AddComponent<AISoundController>();
         }
         //suspicion = 0;
         //pause = false;

@@ -73,6 +73,7 @@ public static class Utils {
     {
         float OldRange = (currentMax - currentMin);
         float NewRange = (newMax - newMin);
+        //return Clamp((((value - currentMin) * NewRange) / OldRange) + newMin, newMin, newMax);
         return (((value - currentMin) * NewRange) / OldRange) + newMin;
     }
 
@@ -111,5 +112,13 @@ public static class Utils {
     public static float Facing(GameObject self, GameObject target)
     {
         return Vector3.Dot(self.transform.forward, (target.transform.position - self.transform.position).normalized);
+    }
+
+    public static int LeftRightCenter(Transform referenceTransform, Vector3 testPosition)
+    {
+        Vector3 relativePoint = referenceTransform.InverseTransformPoint(testPosition);
+        if (relativePoint.x < -0.3f) { return -1; } //point is to the left
+        if (relativePoint.x > 0.3f) { return 1; } //point is to the right
+        return 0; //point is ahead
     }
 }

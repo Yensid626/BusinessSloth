@@ -11,6 +11,7 @@ public class CameraMgr : MonoBehaviour
     public float deltaVelocity = 10;
     Vector3 rotation;
     public float deltaRotation = 3;
+    public float soundEventTimer = 0;
 
     public GameObject FPRig;
     internal GameObject FPChar;
@@ -28,7 +29,10 @@ public class CameraMgr : MonoBehaviour
     {
         position = FPRig.transform.position;
         facing = FPRig.transform.rotation.eulerAngles;
-        AlertSystem.inst.CreateSoundEvent(EventType.FullScreen, 1, Color.red, 5);
+        /*AlertSystem.inst.CreateSoundEvent(EventType.RightEdge, 1, Color.red, true);
+        AlertSystem.inst.CreateSoundEvent(EventType.RightEdge, 2, Color.blue, true);
+        AlertSystem.inst.CreateSoundEvent(EventType.RightEdge, 3, Color.green, 3);
+        AlertSystem.inst.CreateSoundEvent(EventType.RightEdge, 1, Color.cyan, true);*/
     }
 
     // Update is called once per frame
@@ -40,6 +44,7 @@ public class CameraMgr : MonoBehaviour
         RotateChair.inst.Tick(dt);
         ProcessInput();
         Physics(dt);
+        ShowSoundEvents(dt);
     }
 
     void ProcessInput()
@@ -105,6 +110,46 @@ public class CameraMgr : MonoBehaviour
             //Realy old stuff -->//transform.rotation = Quaternion.Euler(new Vector3(FPChar.transform.rotation.x, FPChar.transform.rotation.y, FPChar.transform.rotation.z));
             //transform.eulerAngles = FPChar.transform.eulerAngles;
             FPRig.transform.eulerAngles = FPChar.transform.Find("CameraRig").transform.eulerAngles;
+        }
+    }
+
+    void ShowSoundEvents(float dt)
+    {
+        if ((soundEventTimer -= dt) > 0) { return; }
+
+        soundEventTimer = 0.1f;
+        foreach (Entity381 ent381 in EntityMgr.inst.entitiesPeople)
+        {
+            GameObject ent = ent381.gameObject;
+            //Debug.Log(Utils.Facing(FPRig, ent));
+            if (Utils.Facing(FPRig, ent) >= -50f / 180)
+            {
+                EventType type = EventType.FullScreen;
+                switch (Utils.LeftRightCenter(FPRig.transform, ent.transform.position))
+                {
+                    case -1: type = EventType.LeftEdge; break;
+                    case 0: type = EventType.LeftEdge; break;
+                    case 1: type = EventType.RightEdge; break;
+                }
+                if (Utils.Facing(FPRig, ent) >= 145f / 180) { type = EventType.BottomEdge; }
+
+                float minHearingDist = 2.9f;
+                float maxHearingDist = 16f;
+                float dist = Utils.Clamp(Utils.getDist(ent.transform.position, FPRig.transform.position) - minHearingDist, 0, 25);
+                if (dist <= maxHearingDist)
+                {
+                    float soundLevel = ent381.speed / ent381.maxSpeed;
+                    float lerp = Utils.exponentialMap(0, 1, 0, 1, Utils.exponentialMap(0, maxHearingDist, 1, 0, dist, 2.55f), 12f);
+                    Color color = Color.Lerp(new Color(160, 255, 0), new Color(255, 0, 0), Utils.Clamp(lerp * soundLevel,0,1));
+                    //Debug.Log(ent.name + ": " + dist + "\n" + lerp + "\n" + color);
+                    //Color color = new Color(Utils.Map(3, 12, 255, 180, dist)/255f, Utils.Map(3, 12, 0, 255, dist)/255f, 0);
+                    //Debug.Log(color*255);
+                    //Debug.Log(Color.Lerp(new Color(200, 255, 0), new Color(255, 0, 0), Utils.Clamp(Utils.Map(0, 16, 0, 1, dist), 0, 1)));
+                    AlertSystem.inst.CreateSoundEvent(type, (int)(Utils.Map(0,maxHearingDist,4,1,dist)), color / 255f, 0.2f);
+                    //AlertSystem.inst.CreateSoundEvent(type, (int)(Utils.Map(0,maxHearingDist,4,1,dist)*soundLevel), color, soundEventTimer*2.5f);
+                }
+            }
+
         }
     }
 }
