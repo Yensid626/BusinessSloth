@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: 0e95b4a15bdde1843aade0db94a51e32
   - enabled: 1
+    path: Assets/Scenes/InstructionBased.unity
+    guid: 99d307e415c660641b0e41f2a1305d16
+  - enabled: 1
     path: Assets/Scenes/Office-Daytime.unity
     guid: c57d8608a69f3044da45cdfe222a61a0
   - enabled: 1
