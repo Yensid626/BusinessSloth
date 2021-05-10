@@ -171,5 +171,6 @@ public class CameraMgr : MonoBehaviour
         rotation = new Vector3(rotation.x * rotationMultiplier.x, rotation.y * rotationMultiplier.y, rotation.z * rotationMultiplier.z) * 0.6f;
         //Debug.Log(facing.y + " ~ " + rotation.y);
         Physics(dt);
+        RotateChair.inst.Tick(dt);
     }
 }
