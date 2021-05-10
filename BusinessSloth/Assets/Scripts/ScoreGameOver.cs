@@ -22,7 +22,13 @@ public class ScoreGameOver : MonoBehaviour
     {
         if(Score.inst != null && Score.inst.GetPoints() <= -20)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            ScoreFinal();
         }
+    }
+
+    public void ScoreFinal()
+    {
+        PlayerPrefs.SetFloat("FinalScore", Score.inst.GetPoints());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
