@@ -22,7 +22,8 @@ public class ScoreGameOver : MonoBehaviour
     {
         if(Score.inst != null && Score.inst.GetPoints() <= -20)
         {
-            ScoreFinal();
+            BossAI.minGameTimer -= dt * ((Score.inst.GetPoints()+10)/-100);
+            //ScoreFinal();
         }
     }
 

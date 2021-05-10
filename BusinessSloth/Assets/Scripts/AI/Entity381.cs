@@ -22,6 +22,7 @@ public class Entity381 : MonoBehaviour
     public UnitAI unitAI;
     public AIVision AIVision;
     public AISoundController soundController;
+    public BossAI bossAI;
 
     public GameObject decorations;
 
@@ -50,6 +51,7 @@ public class Entity381 : MonoBehaviour
         {
             soundController = transform.gameObject.AddComponent<AISoundController>();
         }
+        bossAI = gameObject.GetComponent<BossAI>();
         //suspicion = 0;
         //pause = false;
     }
@@ -76,6 +78,8 @@ public class Entity381 : MonoBehaviour
         AIVision.Tick(dt);
         if (pause && !unitAI.AnyImmediate()) { desiredSpeed = 0; }
         OrientedPhysics381.Tick(dt);
+        soundController.Tick(dt);
+        if (bossAI != null) { bossAI.Tick(dt); }
         //transform.localPosition += transform.TransformDirection(Vector3.forward * dt * 1.2f);
     }
 
@@ -135,8 +139,8 @@ public class Entity381 : MonoBehaviour
 
     void addPatrol()
     {
-        unitAI.patrol = true;
         //unitAI.SetCommand(new Command(gameObject, CommandType.Move, transform.position));
+        if (points.Count >= 1) { unitAI.patrol = true; }
         foreach (Vector3 p in points)
         {
             if (p.y == -1)

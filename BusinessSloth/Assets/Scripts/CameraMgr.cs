@@ -152,4 +152,24 @@ public class CameraMgr : MonoBehaviour
 
         }
     }
+
+    public void MoveToCenter(float dt)
+    {
+        rotation = Vector3.zero;
+        Vector3 rotationMultiplier = Vector3.one;
+        if (!Utils.ApproximatelyEqual(Utils.RoundToNearest(facing.x,1), 0)) { rotation.x = (facing.x < 0 ? deltaRotation : -deltaRotation); }
+        if (!Utils.ApproximatelyEqual(Utils.RoundToNearest(facing.y,1), 278f)) { rotation.y = (facing.y < 278 ? deltaRotation : -deltaRotation); }
+        if (!Utils.ApproximatelyEqual(Utils.RoundToNearest(facing.z,1), 0)) { rotation.z = (facing.z < 0 ? deltaRotation : -deltaRotation); }
+
+        for (int i = 0; i < 11; i++)
+        {
+            if (Mathf.Abs(facing.x - 0) < deltaRotation * (1 - (i / 10))) { rotationMultiplier.x *= (0.84f - (i / 50)); }
+            if (Mathf.Abs(facing.y - 278.5f) < deltaRotation * (1 - (i / 10))) { rotationMultiplier.y *= (0.84f - (i / 50)); }
+            if (Mathf.Abs(facing.z - 0) < deltaRotation * (1 - (i / 10))) { rotationMultiplier.z *= (0.84f - (i / 50)); }
+            //Debug.Log(rotationMultiplier.y);
+        }
+        rotation = new Vector3(rotation.x * rotationMultiplier.x, rotation.y * rotationMultiplier.y, rotation.z * rotationMultiplier.z) * 0.6f;
+        //Debug.Log(facing.y + " ~ " + rotation.y);
+        Physics(dt);
+    }
 }

@@ -10,10 +10,14 @@ public class Main : MonoBehaviour
 
     // Update is called once per frame
 
+    public bool gameEnding = false;
+    public static Main inst;
+
     private bool awoken = false;
     private bool started = false;
     private void Awake()
     {
+        inst = this;
         awoken = true;
     }
     private void Start()
@@ -29,8 +33,9 @@ public class Main : MonoBehaviour
 
     internal void Tick(float dt)
     {
+        if (!gameEnding) { SelectionMgr.inst.Tick(dt); CameraMgr.inst.Tick(dt); }
+        if (gameEnding) { CameraMgr.inst.MoveToCenter(dt); AlertSystem.inst.ClearSoundEvents(); }
         EntityMgr.inst.Tick(dt);
-        CameraMgr.inst.Tick(dt);
         UIMgr.inst.Tick(dt);
 
         ScoreGameOver.inst.Tick(dt);

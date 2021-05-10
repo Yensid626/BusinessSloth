@@ -19,6 +19,7 @@ public class AISoundController : MonoBehaviour
     public void Tick(float dt)
     {
         sound.volume = entity.speed / entity.maxSpeed;
+        sound.mute = (dt == 0 ? true : false);
     }
 
     void SetupAudio()

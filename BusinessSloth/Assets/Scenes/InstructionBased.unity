@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -506,8 +506,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.3, y: -23.1}
-  m_SizeDelta: {x: 704.1642, y: 203.36804}
+  m_AnchoredPosition: {x: -2.3, y: -13.71}
+  m_SizeDelta: {x: 704.1642, y: 251.35776}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1300743897
 MonoBehaviour:
@@ -531,18 +531,22 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 30
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 72
+    m_MaxSize: 60
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The purpose of the game is to get as many points as you can without getting
-    caught. Also, if your score gets below -20 points, your run ends. You can pause
-    the game with the Tab button. Continue?
+  m_Text: "- The purpose of the game is to get as many points as you can without getting
+    caught. \n- To get points click on the objects around you, but don't get caught!
+    \ Your cowarkers will rat you out to the Boss if they see him.\n- You will be
+    able to hear your coworkers walking around (or use the color indicators on the
+    sides of the screen). \n- You will only have a few minutes before the day is over.
+    If you need a break, pause the game with the Tab button. \n\nPress \"Continue\"
+    to Start!"
 --- !u!222 &1300743898
 CanvasRenderer:
   m_ObjectHideFlags: 0

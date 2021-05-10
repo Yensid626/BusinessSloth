@@ -32,7 +32,7 @@ public class EntityMgr : MonoBehaviour
     {
         ProcessInput();
         TickEntities(dt);
-        SelectionMgr.inst.Tick(dt);
+        //SelectionMgr.inst.Tick(dt);
         //etselectionMgr.GetComponent<SelectionMgr>().Tick(dt);
     }
 

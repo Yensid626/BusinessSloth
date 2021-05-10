@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIMgr : MonoBehaviour
 {
@@ -20,5 +21,14 @@ public class UIMgr : MonoBehaviour
     {
         Score.inst.Tick(dt);
         AlertSystem.inst.Tick(dt);
+    }
+
+    public void gameOver()
+    {
+        GameObject screen = GameObject.Find("PointScreen").gameObject;
+        if (screen != null)
+        {
+            screen.transform.Find("Menu").gameObject.SetActive(true);
+        }
     }
 }

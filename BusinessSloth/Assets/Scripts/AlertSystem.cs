@@ -15,7 +15,7 @@ public class AlertSystem : MonoBehaviour
     {
         inst = this;
         HUD = GameObject.Find("HUD");
-        if (HUD != null) { Debug.Log("Found It!"); }
+        //if (HUD != null) { Debug.Log("Found It!"); }
         ClearSoundEvents();
     }
     // Start is called before the first frame update

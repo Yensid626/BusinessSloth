@@ -121,7 +121,7 @@ public class AIVision : MonoBehaviour
                     GameObject selectedObject = SelectionMgr.inst.selectedEntity;
                     if (selectedObject == null) { entity.suspicion = Utils.Clamp(entity.suspicion += 0.5f, -1, 10); return; }
                     //entity.suspision += selectedObject.GetComponent<Points>().points;
-                    entity.suspicion = Utils.Clamp(entity.suspicion += selectedObject.GetComponent<Points>().points, -1, 10);
+                    entity.suspicion = Utils.Clamp(entity.suspicion += selectedObject.GetComponent<Points>().points, -3, 10);
                     //Debug.Log("Ha Found you Slacking Off");
                 }
                 if (collectGossip)
@@ -161,7 +161,7 @@ public class AIVision : MonoBehaviour
     {
         ent.pause = true;
         gossipingEntities.Add(ent);
-        Debug.Log("Joined in some gossip");
+        //Debug.Log("Joined in some gossip");
     }
     public void FinishGossip()
     {
@@ -173,7 +173,7 @@ public class AIVision : MonoBehaviour
         }
         gossipingEntities.Clear(); gossipingEntities.TrimExcess();
         recentGossip = 5f;
-        Debug.Log("Finished Gossiping");
+        //Debug.Log("Finished Gossiping");
     }
 
     internal GameObject castRayToObject(GameObject obj) // ####Folder Pos is this entitys eyesight!####

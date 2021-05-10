@@ -8,6 +8,6 @@ public class SettingsMenu : MonoBehaviour
     public AudioMixer audioM;
    public void SetVolume(float volume)
     {
-        audioM.SetFloat("volume", volume);
+        audioM.SetFloat("volume", Utils.Map(0,1,0,0.4f,volume));
     }
 }
